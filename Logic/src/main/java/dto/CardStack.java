@@ -24,11 +24,24 @@ public class CardStack {
 		boolean lastHidden = false;
 		int movable = 0;
 
-		while (oppositeLast && (!lastHidden) && (!lastRed)) {
+		for (int i = 0; i < stack.size(); i++) {
+			if (i == 0) {
+				movable++;
+			} else {
+
+			}
 
 		}
 
 		this.movable = movable;
+	}
+
+	public int getMovable() {
+		return this.movable;
+	}
+
+	public Card cardAt(int index) {
+		return stack.elementAt(index);
 	}
 
 	@Override
