@@ -1,5 +1,5 @@
 import dto.Card;
-import dto.CardStack;
+import dto.GameStack;
 import dto.GameState;
 import parser.CardDeck;
 
@@ -7,7 +7,7 @@ public class main {
     public static void main(String[] args) {
         CardDeck deck = CardDeck.getINSTANCE();
         GameState game = new GameState();
-        CardStack[] gameStacks = game.getGameStacks();
+        GameStack[] gameStacks = game.getGameStacks();
 
         for (int i = 0; i < 5; i++) {
             Card c = deck.draw();

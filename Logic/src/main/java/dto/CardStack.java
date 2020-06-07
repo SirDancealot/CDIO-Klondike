@@ -1,55 +1,58 @@
 package dto;
 
-import java.util.ArrayList;
 import java.util.Stack;
 
 public class CardStack {
-	private Stack<Card> stack = new Stack<Card>();
-	private ArrayList<Card> tmp = new ArrayList<Card>();
-	private int movable = 0;
 
-	public void addCard(Card c) {
-		stack.add(c);
-		calculateMovable();
-	}
+    Stack<Card> stack = new Stack<Card>();
 
-	public void addStack(CardStack cStack) {
+    public void addCard(Card c) {
+        stack.add(c);
+    }
 
-		calculateMovable();
-	}
+    public Card getTopCard(){
+        if(stack.empty()) return null;
+        return stack.peek();
+    }
 
-	private void calculateMovable() {
-		boolean lastRed = false;
-		boolean oppositeLast = true;
-		boolean lastHidden = false;
-		int movable = 0;
+    public int size(){
+        return stack.size();
+    }
 
-		for (int i = 0; i < stack.size(); i++) {
-			if (i == 0) {
-				movable++;
-			} else {
+    public boolean isEmpty(){
+        return stack.isEmpty();
+    }
 
-			}
+    public Card getCardAt(int index) {
+        return stack.elementAt(index);
+    }
 
-		}
+    Stack<Card> takeCards(int index){
+        Stack<Card> cards = new Stack<Card>();
 
-		this.movable = movable;
-	}
+        int cardsRemoved = 0;
+        for (int i = stack.size()-1; i >= index; i--) {
+            cards.add(stack.elementAt(i));
+            cardsRemoved++;
+        }
+        for (int i = 0; i < cardsRemoved; i++) {
+            stack.pop();
+        }
+        return cards;
+    }
 
-	public int getMovable() {
-		return this.movable;
-	}
+    void addCards(Stack<Card> cards){
+        for (int i = 0; i < cards.size(); i++) {
+            stack.add(cards.pop());
+        }
+    }
 
-	public Card cardAt(int index) {
-		return stack.elementAt(index);
-	}
-
-	@Override
-	public String toString() {
-		String s = "CardStack{";
-		for (Card c : stack) {
-			s = s.concat(("\nCard = " + c.toString()));
-		}
-		return  s.concat("\n}");
-	}
+    @Override
+    public String toString() {
+        String s = "CardStack{";
+        for (Card c : stack) {
+            s = s.concat(("\nCard = " + c.toString()));
+        }
+        return  s.concat("\n}");
+    }
 }

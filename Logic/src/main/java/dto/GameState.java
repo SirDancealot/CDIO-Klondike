@@ -1,33 +1,33 @@
 package dto;
 
 public class GameState {
-    private CardStack stock = new CardStack();
-    private CardStack turnedStock = new CardStack();
-    private CardStack[] gameStacks = new CardStack[7];
-    private CardStack[] finishStacks = new CardStack[4];
+    private GameStack stock = new GameStack();
+    private GameStack turnedStock = new GameStack();
+    private GameStack[] gameStacks = new GameStack[7];
+    private GameStack[] finishStacks = new GameStack[4];
 
     public GameState() {
         for (int i = 0; i < 7; i++) {
-            gameStacks[i] = new CardStack();
+            gameStacks[i] = new GameStack();
         }
         for (int i = 0; i < 4; i++) {
-            finishStacks[i] = new CardStack();
+            finishStacks[i] = new GameStack();
         }
     }
 
-    public CardStack getStock() {
+    public GameStack getStock() {
         return stock;
     }
 
-    public CardStack getTurnedStock() {
+    public GameStack getTurnedStock() {
         return turnedStock;
     }
 
-    public CardStack[] getGameStacks() {
+    public GameStack[] getGameStacks() {
         return gameStacks;
     }
 
-    public CardStack[] getFinishStacks() {
+    public GameStack[] getFinishStacks() {
         return finishStacks;
     }
 }
