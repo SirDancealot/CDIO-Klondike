@@ -7,6 +7,11 @@ public class Card {
         HEARTS, SPADES, DIAMONDS, CLUBS
     }
 
+    public enum Color {
+        BLACK, RED
+    }
+
+    private Color color;
     private Suit suit;
     private int cardValue;
     private boolean hidden = true;
@@ -14,6 +19,13 @@ public class Card {
     public Card(Suit suit, int cardValue) {
         this.suit = suit;
         this.cardValue = cardValue;
+        if(suit == Suit.SPADES || suit == Suit.CLUBS){
+            this.color = Color.BLACK;
+        }else this.color = Color.RED;
+    }
+
+    public Color getColor(){
+        return color;
     }
 
     public Suit getSuit() {
@@ -22,6 +34,9 @@ public class Card {
 
     public void setSuit(Suit suit) {
         this.suit = suit;
+        if(suit == Suit.SPADES || suit == Suit.CLUBS){
+            this.color = Color.BLACK;
+        }else this.color = Color.RED;
     }
 
     public int getCardValue() {

@@ -47,6 +47,12 @@ public class CardStack {
         }
     }
 
+    void addCardsReversed(Stack<Card> cards){
+        for (int i = cards.size()-1; i >= 0; i++) {
+            stack.add(cards.elementAt(i));
+        }
+    }
+
     @Override
     public String toString() {
         String s = "CardStack{";
