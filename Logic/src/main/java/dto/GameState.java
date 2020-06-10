@@ -53,10 +53,9 @@ public class GameState {
                     for (FinishStack finishStack : finishStacks) {
                         if (finishStack.isEmpty()) {
                             finishStack.stack.add(card);
-                            break;
+                            return "Move " + card.toString() + " to an empty finish stack";
                         }
                     }
-                    return "Move " + card.getCardValue() + " of " + card.getSuit() + " to an empty finish stack";
                 }
             }
         }
@@ -71,7 +70,7 @@ public class GameState {
                         if(!gameStackReceive.isEmpty()) {
                             if (gameStackReceive.stack.peek().getColor() != gameStackTake.stack.elementAt(i).getColor()) {
                                 if (gameStackReceive.stack.peek().getCardValue() == gameStackTake.stack.elementAt(i).getCardValue() + 1) {
-                                    String returnString = "Move " + gameStackTake.stack.elementAt(i).getCardValue() + " of " + gameStackTake.stack.elementAt(i).getSuit() + " to " + gameStackReceive.stack.peek().getCardValue() + " of " + gameStackReceive.stack.peek().getSuit();
+                                    String returnString = "Move " + gameStackTake.stack.elementAt(i).toString() + " to " + gameStackReceive.stack.peek().toString();
                                     gameStackReceive.addCards(gameStackTake.takeCards(i));
                                     return returnString;
                                 }
@@ -94,7 +93,7 @@ public class GameState {
                            if(!finishStack.isEmpty()) {
                                if (finishStack.stack.peek().getCardValue() == gameStack.stack.elementAt(i).getCardValue() - 1) {
                                    if (finishStack.stack.peek().getSuit() == gameStack.stack.elementAt(i).getSuit()) {
-                                       String returnString = "Move " + gameStack.stack.elementAt(i).getCardValue() + " of " + gameStack.stack.elementAt(i).getSuit() + " to " + finishStack.stack.peek().getCardValue() + " of " + finishStack.stack.peek().getSuit() + " on finish stack";
+                                       String returnString = "Move " + gameStack.stack.elementAt(i).toString() + " to " + finishStack.stack.peek().toString() + " on finish stack";
                                        finishStack.addCards(gameStack.takeCards(i));
                                        return returnString;
                                    }
@@ -118,7 +117,7 @@ public class GameState {
                     for (int i = 0; i < gameStack.size(); i++) {
                         if(!gameStack.stack.elementAt(i).isHidden()){
                             if(gameStack.stack.elementAt(i).getCardValue() == 13 && i != 0){
-                                String returnString = "Move 13 of " + gameStack.stack.elementAt(i).getSuit() + " to empty stack " + index;
+                                String returnString = "Move " + gameStack.stack.elementAt(i).toString() + " to empty stack " + index;
                                 gameStackEmpty.addCards(gameStack.takeCards(i));
                                 return returnString;
                             }
@@ -133,24 +132,48 @@ public class GameState {
 
     private String playCardFromTurnedStock(){
         if(!turnedStock.isEmpty()){
+            if(turnedStock.stack.peek().getCardValue() == 13){
+                String returnString = null;
+                int index = 0;
+                for (GameStack gameStack : gameStacks) {
+                    index++;
+                    if(gameStack.isEmpty()){
+                        returnString = "Move " + turnedStock.stack.peek().toString() + " from stock to stack " + index;
+                        gameStack.addCard(turnedStock.stack.pop());
+                        return returnString;
+                    }
+                }
+            }
+        }
+        if(!turnedStock.isEmpty()){
             if(turnedStock.stack.peek().getCardValue() == 1){
                 String returnString = null;
                 for (FinishStack finishStack : finishStacks) {
                     if(finishStack.isEmpty()){
-                        returnString = "Move 1 of " + turnedStock.stack.peek().getSuit() + " from stock to empty finish stack";
+                        returnString = "Move " + turnedStock.stack.peek().toString() + " from stock to empty finish stack";
                         finishStack.addCard(turnedStock.stack.pop());
+                        return returnString;
                     }
                 }
-                return returnString;
-
             }
         }
         for (GameStack gameStack : gameStacks) {
             if(!gameStack.isEmpty() && !turnedStock.isEmpty()) {
                 if (turnedStock.stack.peek().getColor() != gameStack.stack.peek().getColor()) {
                     if (turnedStock.stack.peek().getCardValue() == gameStack.stack.peek().getCardValue() - 1) {
-                        String returnString = "Move " + turnedStock.stack.peek().getCardValue() + " of " + turnedStock.stack.peek().getSuit() + " to " + gameStack.stack.peek().getCardValue() + " of " + gameStack.stack.peek().getSuit();
+                        String returnString = "Move " + turnedStock.stack.peek().toString() +  " to " + gameStack.stack.peek().toString();
                         gameStack.addCard(turnedStock.stack.pop());
+                        return returnString;
+                    }
+                }
+            }
+        }
+        for (FinishStack finishStack : finishStacks) {
+            if(!finishStack.isEmpty() && !turnedStock.isEmpty()) {
+                if (turnedStock.stack.peek().getSuit() == finishStack.stack.peek().getSuit()) {
+                    if (turnedStock.stack.peek().getCardValue() == finishStack.stack.peek().getCardValue() + 1) {
+                        String returnString = "Move " + turnedStock.stack.peek().toString() +  " to " + finishStack.stack.peek().toString() + " on finish stack";
+                        finishStack.addCard(turnedStock.stack.pop());
                         return returnString;
                     }
                 }
@@ -197,7 +220,7 @@ public class GameState {
                 if(!gameStack.isEmpty() && !finishStack.isEmpty()) {
                     if (gameStack.stack.peek().getSuit() == finishStack.stack.peek().getSuit()) {
                         if (gameStack.stack.peek().getCardValue() == finishStack.stack.peek().getCardValue() + 1) {
-                            returnString = "Move " + gameStack.stack.peek().getCardValue() + " of " + gameStack.stack.peek().getSuit() + " to " + finishStack.stack.peek().getCardValue() + " of " + finishStack.stack.peek().getSuit();
+                            returnString = "Move " + gameStack.stack.peek().toString() + " to " + finishStack.stack.peek().toString();
                             finishStack.stack.add(gameStack.stack.pop());
                             return returnString;
                         }
@@ -229,18 +252,16 @@ public class GameState {
         if(returnString != null){
             return returnString;
         }
-        returnString = turnNewCardFromStockTest();
-        if(returnString != null){
-            return returnString;
-        }
         returnString = lastVisibleCardToFinishStack();
-        if(returnString != null){
+        if(returnString != null) {
             return returnString;
         }
         returnString = cardToFinishStack();
+        if(returnString != null) {
+            return returnString;
+        }
+        returnString = turnNewCardFromStockTest();
         return returnString;
-
-
 
     }
 
