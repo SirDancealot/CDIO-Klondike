@@ -6,6 +6,16 @@ public class GameState {
     private GameStack[] gameStacks = new GameStack[7];
     private FinishStack[] finishStacks = new FinishStack[4];
 
+    private static GameState gameState_instance = null;
+
+    public static GameState getInstance()
+    {
+        if (gameState_instance == null)
+            gameState_instance = new GameState();
+
+        return gameState_instance;
+    }
+
     public GameState() {
         for (int i = 0; i < 7; i++) {
             gameStacks[i] = new GameStack();
@@ -22,6 +32,7 @@ public class GameState {
             index++;
             if(gameStack.stack.peek().isHidden()){
                 gameStack.stack.peek().setHidden(false);
+                gameStack.stack.peek().setKnown(true);
                 return "Turn hidden card on stack " + index;
             }
         }
@@ -35,6 +46,7 @@ public class GameState {
             if(!gameStack.stack.isEmpty()) {
                 if (gameStack.stack.peek().isHidden()) {
                     gameStack.stack.peek().setHidden(false);
+                    gameStack.stack.peek().setKnown(true);
                     return "Turn hidden card on stack " + index;
                 }
             }
@@ -199,6 +211,7 @@ public class GameState {
             String returnString = "Turn new card from the stock";
             turnedStock.stack.add(stock.stack.pop());
             turnedStock.stack.peek().setHidden(false);
+            turnedStock.stack.peek().setKnown(true);
             return returnString;
         }else if(turnedStock.size() > 0){
             String returnString = "Turn the stock over, then turn new card from the stock";
@@ -209,6 +222,7 @@ public class GameState {
 
             turnedStock.stack.add(stock.stack.pop());
             turnedStock.stack.peek().setHidden(false);
+            turnedStock.stack.peek().setKnown(true);
             return returnString;
         }else return null;
     }
@@ -231,6 +245,75 @@ public class GameState {
         return null;
     }
 
+    private boolean possibleMoveInStock(){
+        for (Card card : stock.stack) {
+            if(!card.isKnown()){
+                return true;
+            }
+            if(card.getCardValue() == 1){
+                return true;
+            }
+            for (GameStack gameStack : gameStacks) {
+                if(!gameStack.isEmpty()) {
+                    if ((card.getCardValue() == gameStack.stack.peek().getCardValue() - 1) && (card.getColor() != gameStack.stack.peek().getColor())) {
+                        return true;
+                    }
+                }
+                if(gameStack.isEmpty() && card.getCardValue() == 13){
+                    return true;
+                }
+            }
+            for (FinishStack finishStack : finishStacks) {
+                if(!finishStack.isEmpty()) {
+                    if ((card.getCardValue() == finishStack.stack.peek().getCardValue() + 1) && (card.getSuit() == finishStack.stack.peek().getSuit())) {
+                        return true;
+                    }
+                }
+
+            }
+        }
+        for (Card card : turnedStock.stack) {
+            if(!card.isKnown()){
+                return true;
+            }
+            if(card.getCardValue() == 1){
+                return true;
+            }
+            for (GameStack gameStack : gameStacks) {
+                if(!gameStack.isEmpty()) {
+                    if ((card.getCardValue() == gameStack.stack.peek().getCardValue() - 1) && (card.getColor() != gameStack.stack.peek().getColor())) {
+                        return true;
+                    }
+                }
+                if(gameStack.isEmpty() && card.getCardValue() == 13){
+                    return true;
+                }
+            }
+            for (FinishStack finishStack : finishStacks) {
+                if(!finishStack.isEmpty()) {
+                    if ((card.getCardValue() == finishStack.stack.peek().getCardValue() + 1) && (card.getSuit() == finishStack.stack.peek().getSuit())) {
+                        return true;
+                    }
+                }
+
+            }
+        }
+        return false;
+    }
+    
+    public boolean gameWon(){
+        boolean won = true;
+        for (FinishStack finishStack : finishStacks) {
+            if(finishStack.isEmpty()){
+                return false;
+            }
+            if(finishStack.stack.peek().getCardValue() != 13){
+                won = false;
+            }
+        }
+        return won;
+    }
+
     public String makeMoveTest(){
         String returnString;
         returnString = turnHiddenCardTest();
@@ -248,7 +331,8 @@ public class GameState {
         returnString = kingToEmptyStack();
         if(returnString != null){
             return returnString;
-        }returnString = playCardFromTurnedStock();
+        }
+        returnString = playCardFromTurnedStock();
         if(returnString != null){
             return returnString;
         }
@@ -256,13 +340,14 @@ public class GameState {
         if(returnString != null) {
             return returnString;
         }
-        returnString = cardToFinishStack();
-        if(returnString != null) {
-            return returnString;
+        if(possibleMoveInStock()) {
+            returnString = turnNewCardFromStockTest();
+            if (returnString != null) {
+                return returnString;
+            }
         }
-        returnString = turnNewCardFromStockTest();
+        returnString = cardToFinishStack();
         return returnString;
-
     }
 
     public CardStack getStock() {

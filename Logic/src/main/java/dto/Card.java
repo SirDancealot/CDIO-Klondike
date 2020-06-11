@@ -15,6 +15,15 @@ public class Card {
     private Suit suit;
     private int cardValue;
     private boolean hidden = true;
+    private boolean isKnown = false;
+
+    public boolean isKnown() {
+        return isKnown;
+    }
+
+    public void setKnown(boolean known) {
+        isKnown = known;
+    }
 
     public Card(Suit suit, int cardValue) {
         this.suit = suit;
