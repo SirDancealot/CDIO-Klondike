@@ -1,17 +1,20 @@
 
 import cv2
 import numpy as np
+import image_slicer
+
+image_slicer.calc_columns_rows(5)
 
 
 
 confThreshold = 0.5  #Confidence threshold
 nmsThreshold = 0.4   #Non-maximum suppression threshold
-inpWidth = 288      #Width of network's input image
-inpHeight = 288      #Height of network's input image
+inpWidth = 608      #Width of network's input image
+inpHeight = 608      #Height of network's input image
 
 
 # Load Yolo
-net = cv2.dnn.readNet("Kopi_af_yolov3_training_last.weights", "yolov3_training.cfg")
+net = cv2.dnn.readNet("yolov3_training_last.weights", "yolov3_training.cfg")
 
 
 # Name custom object
@@ -97,7 +100,6 @@ while(True):
 
     # Capture frame-by-frame
     _, frame = cap.read()
-
 
     # Our operations on the frame come here
 
