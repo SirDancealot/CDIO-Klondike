@@ -375,7 +375,7 @@ public class GameState {
             return returnString;
         }
         returnString = kingToEmptyStack();
-        if(returnString != null){
+        if(returnString != null) {
             return returnString;
         }
         returnString = splitStackToMakeLargerStack();

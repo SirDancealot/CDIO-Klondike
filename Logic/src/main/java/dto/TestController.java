@@ -7,7 +7,7 @@ public class TestController {
 
 
         TestController testController = new TestController();
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 1000000; i++) {
             testController.setupGame();
             testController.runGame();
         }
@@ -30,7 +30,7 @@ public class TestController {
         boolean moveSinceLastStockTurn = true;
         while(running){
             if(gameState.gameWon()){
-                System.out.println("YOU WON!");
+                //System.out.println("YOU WON!");
                 wonGames++;
                 break;
             }else {
@@ -38,11 +38,11 @@ public class TestController {
 
                 if (moveString == null) {
                     running = false;
-                    System.out.println("GAME OVER!");
+                    //System.out.println("GAME OVER!");
                     lostGames++;
                 } else {
                     if (moveString.equals("Turn the stock over, then turn new card from the stock") && !moveSinceLastStockTurn) {
-                        System.out.println("GAME OVER!");
+                        //System.out.println("GAME OVER!");
                         lostGames++;
                         break;
                     } else if (!moveString.equals("Turn the stock over, then turn new card from the stock") && !moveString.equals("Turn new card from the stock")) {
@@ -51,10 +51,11 @@ public class TestController {
                         moveSinceLastStockTurn = false;
                     }
 
-                    System.out.println(moveString);
-                    System.out.println(gameState.countCardsInGame());
+                    //System.out.println(moveString);
+                    //System.out.println(gameState.countCardsInGame());
+
                     Scanner scanner = new Scanner(System.in);
-                    scanner.nextLine();
+                    //scanner.nextLine();
                 }
             }
         }
