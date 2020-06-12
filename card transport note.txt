@@ -1,0 +1,33 @@
+card: 0010 (number) 0011 (suit)
+
+0000 1010
+card - 'f' 0000 0000
+card - 'h'
+card
+card
+card
+card
+card
+card
+card
+card
+
+0000 0010
+card
+card
+
+x7
+
+finish stacks
+top card 1
+top card 2
+top card 3
+top card 4
+
+
+stock
+stock card 1
+stock card 2
+stock card 3
+
+"fhreoithlfgn"
