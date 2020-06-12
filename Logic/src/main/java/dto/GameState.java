@@ -205,6 +205,8 @@ public class GameState {
         }else return null;
     }
 
+
+
     private String turnNewCardFromStockTest(){
 
         if(stock.size() > 0){
@@ -227,6 +229,19 @@ public class GameState {
         }else return null;
     }
 
+    public int countCardsInGame(){
+        int cards = 0;
+        for (GameStack gameStack : gameStacks) {
+            cards += gameStack.size();
+        }
+        for (FinishStack finishStack : finishStacks) {
+            cards += finishStack.size();
+        }
+        cards += stock.size();
+        cards += turnedStock.size();
+        return cards;
+    }
+
     private String cardToFinishStack(){
         String returnString;
         for (GameStack gameStack : gameStacks) {
@@ -239,6 +254,37 @@ public class GameState {
                             return returnString;
                         }
                     }
+                }
+            }
+        }
+        return null;
+    }
+
+    private String splitStackToMakeLargerStack(){
+        for (GameStack gameStackTake : gameStacks) {
+            int nonHiddenCardsBeforeThisInTake = 0;
+            for (int i = 0; i < gameStackTake.stack.size(); i++) {
+                if(!gameStackTake.stack.elementAt(i).isHidden()){
+                    for (GameStack gameStackReceive : gameStacks) {
+                        int nonHiddenCardsBeforeThisInReceive = -1;
+                        for (int j = 0; j < gameStackReceive.stack.size(); j++) {
+                            if(!gameStackReceive.stack.elementAt(j).isHidden()){
+                                nonHiddenCardsBeforeThisInReceive++;
+                            }
+                        }
+                        if(!gameStackReceive.isEmpty()) {
+                            if (gameStackTake.stack.elementAt(i).getCardValue() == gameStackReceive.stack.peek().getCardValue() - 1) {
+                                if (gameStackTake.stack.elementAt(i).getColor() != gameStackReceive.stack.peek().getColor()) {
+                                    if (nonHiddenCardsBeforeThisInTake < nonHiddenCardsBeforeThisInReceive) {
+                                        String returnString = "Move " + gameStackTake.stack.elementAt(i).toString() + " to " + gameStackReceive.stack.peek().toString();
+                                        gameStackReceive.addCards(gameStackTake.takeCards(i));
+                                        return returnString;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    nonHiddenCardsBeforeThisInTake++;
                 }
             }
         }
@@ -329,6 +375,10 @@ public class GameState {
             return returnString;
         }
         returnString = kingToEmptyStack();
+        if(returnString != null){
+            return returnString;
+        }
+        returnString = splitStackToMakeLargerStack();
         if(returnString != null){
             return returnString;
         }

@@ -29,13 +29,13 @@ public class TestController {
         boolean running = true;
         boolean moveSinceLastStockTurn = true;
         while(running){
-
             if(gameState.gameWon()){
                 System.out.println("YOU WON!");
                 wonGames++;
                 break;
             }else {
                 String moveString = gameState.makeMoveTest();
+
                 if (moveString == null) {
                     running = false;
                     System.out.println("GAME OVER!");
@@ -52,8 +52,9 @@ public class TestController {
                     }
 
                     System.out.println(moveString);
+                    System.out.println(gameState.countCardsInGame());
                     Scanner scanner = new Scanner(System.in);
-                    //scanner.nextLine();
+                    scanner.nextLine();
                 }
             }
         }
