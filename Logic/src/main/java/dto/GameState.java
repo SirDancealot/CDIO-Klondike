@@ -362,6 +362,7 @@ public class GameState {
 
     public String makeMoveTest(){
         String returnString;
+
         returnString = turnHiddenCardTest();
         if(returnString != null){
             return returnString;
