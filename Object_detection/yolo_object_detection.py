@@ -78,7 +78,6 @@ def postprocess(frame, outs, filename):
                     box1 = boxes_o[i]
                     box2 = [left, top, width, height, x, y]
 
-                    print("y="+y +" : "+"x="+x)
                     if box1[4] == "02":
                         box1[0] += frameWidth
                     if box2[4] == "02":
@@ -90,6 +89,13 @@ def postprocess(frame, outs, filename):
 
                     duplicate_boxes.append(box1)
                     duplicate_boxes.append(box2)
+                else:
+                    box = [left, top, width, height, x, y]
+                    if box[4] == "02":
+                        box[0] += frameWidth
+                    if box[5] == "02":
+                        box[1] += frameHeight
+                    singles.append((classId, box))
                 classIds.append(classId)
                 classIds_o.append(classId)
                 confidences.append(float(confidence))
@@ -111,17 +117,51 @@ def postprocess(frame, outs, filename):
     # classIds = list(dict.fromkeys(classIds))
 
 
+singles = []
 duplicates = []
 duplicate_boxes = []
+lowest_y_box = None
 
 
 def registrer_piles(img):
+    global lowest_y_box
+    if lowest_y_box is None:
+        lowest_y_box = [0xffffffff, 0xffffffff]
+        for box in duplicate_boxes:
+            if box[1] < lowest_y_box[1]:
+                lowest_y_box = box
+    print(lowest_y_box)
+    box_height = int(lowest_y_box[3]*1.25)
+    box_height_range = range(lowest_y_box[1], lowest_y_box[1] + box_height)
+    row_width = None
+    row_x = []
+    row_final = [[], [], [], [], [], [], []]
     for i in range(0, len(duplicates), 2):
         l1 = duplicate_boxes[i][0] if duplicate_boxes[i][0] < duplicate_boxes[i + 1][0] else duplicate_boxes[i + 1][0]
         t1 = duplicate_boxes[i][1] if duplicate_boxes[i][1] < duplicate_boxes[i + 1][1] else duplicate_boxes[i + 1][1]
         l2 = duplicate_boxes[i][0] if duplicate_boxes[i][0] > duplicate_boxes[i + 1][0] else duplicate_boxes[i + 1][0]
         t2 = duplicate_boxes[i][1] if duplicate_boxes[i][1] > duplicate_boxes[i + 1][1] else duplicate_boxes[i + 1][1]
+        row_width = int((l2 - l1) / 2)
+        if True not in np.in1d(row_x, range(l1 - row_width, l1 + row_width)):
+            row_x.append(l1)
         cv2.rectangle(img, (l1, t1), (l2, t2), (255, 255, 255), 4)
+    row_x.sort()
+    # singles.sort(key=lambda tup: tup[1][1])
+    for tup in singles:
+        if tup[1][1] not in box_height_range:
+            for i in range(len(row_x)):
+                if row_x[i] in range(tup[1][0] - row_width, tup[1][0] + row_width):
+                    row_final[i].append(tup)
+        else:
+            # handle top cards
+            pass
+
+    for row in row_final:
+        row.sort(key=lambda tup: tup[1][1])
+
+    for row in row_final:
+        print(row)
+
     return img
 
 
