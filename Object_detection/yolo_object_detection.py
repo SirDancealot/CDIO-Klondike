@@ -1,23 +1,21 @@
-
 import cv2
 import numpy as np
 import image_slicer
 
-confThreshold = 0.8  #Confidence threshold
-nmsThreshold = 0.4   #Non-maximum suppression threshold
-inpWidth = 608     #Width of network's input image
-inpHeight = 608      #Height of network's input image
-
+confThreshold = 0.8  # Confidence threshold
+nmsThreshold = 0.4  # Non-maximum suppression threshold
+inpWidth = 608  # Width of network's input image
+inpHeight = 608  # Height of network's input image
 
 # Load Yolo
 net = cv2.dnn.readNet("yolov3_training_last.weights", "yolov3_training.cfg")
 
-
 # Name custom object
-classes = ["Ah","Kh","Qh","Jh","10h","9h","8h","7h","6h","5h","4h","3h","2h","Ad","Kd","Qd","Jd","10d","9d","8d","7d",
-           "6d","5d","4d","3d","2d","Ac","Kc","Qc","Jc","10c","9c","8c","c7","c6","c5","c4","c3","c2","As","Ks","Qs",
-           "Js","10s","9s","8s","7s","6s","5s","4s","3s","2s"]
-
+classes = ["Ah", "Kh", "Qh", "Jh", "10h", "9h", "8h", "7h", "6h", "5h", "4h", "3h", "2h", "Ad", "Kd", "Qd", "Jd", "10d",
+           "9d", "8d", "7d",
+           "6d", "5d", "4d", "3d", "2d", "Ac", "Kc", "Qc", "Jc", "10c", "9c", "8c", "c7", "c6", "c5", "c4", "c3", "c2",
+           "As", "Ks", "Qs",
+           "Js", "10s", "9s", "8s", "7s", "6s", "5s", "4s", "3s", "2s"]
 
 layer_names = net.getLayerNames()
 output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
@@ -33,25 +31,29 @@ def drawPred(classId, conf, left, top, right, bottom):
 
     # Get the label for the class name and its confidence
     if classes:
-        assert(classId < len(classes))
+        assert (classId < len(classes))
         label = '%s:%s' % (classes[classId], label)
 
-    #Display the label at the top of the bounding box
+    # Display the label at the top of the bounding box
     labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1)
     top = max(top, labelSize[1])
     cv2.putText(frame, label, (left, top), cv2.FONT_HERSHEY_SIMPLEX, 2, COLORS[classId], 6)
 
 
 # Remove the bounding boxes with low confidence using non-maxima suppression
-def postprocess(frame, outs):
+classIds_o = []
+boxes_o = []
 
+
+def postprocess(frame, outs, filename):
+    _, _, y, x = filename.split("_")
     frameHeight = frame.shape[0]
     frameWidth = frame.shape[1]
 
     # Scan through all the bounding boxes output from the network and keep only the
     # ones with high confidence scores. Assign the box's class label as the class with the highest score.
-    classIds = []
     confidences = []
+    classIds = []
     boxes = []
 
     for out in outs:
@@ -67,14 +69,32 @@ def postprocess(frame, outs):
                 height = int(detection[3] * frameHeight)
                 left = int(center_x - width / 2)
                 top = int(center_y - height / 2)
-                #if classId not in classIds:
+                if classId in classIds_o:
+                    duplicates.append(classId)
+                    duplicates.append(classId)
+                    i = classIds_o.index(classId)
+                    box1 = boxes_o[i]
+                    box2 = [left, top, width, height, x, y]
+
+                    #if box1[4] == "02":
+                    #    box1[0] += frameWidth
+                    #if box2[4] == "02":
+                    #    box2[0] += frameWidth
+                    if box1[5] == "02":
+                        box1[1] += frameHeight
+                    if box2[5] == "02":
+                        box2[1] += frameHeight
+
+                    duplicate_boxes.append(box1)
+                    duplicate_boxes.append(box2)
                 classIds.append(classId)
+                classIds_o.append(classId)
                 confidences.append(float(confidence))
                 boxes.append([left, top, width, height])
+                boxes_o.append([left, top, width, height, x, y])
 
     # Perform non maximum suppression to eliminate redundant overlapping boxes with
     # lower confidences.
-
     indices = cv2.dnn.NMSBoxes(boxes, confidences, confThreshold, nmsThreshold)
     for i in indices:
         i = i[0]
@@ -85,13 +105,26 @@ def postprocess(frame, outs):
         height = box[3]
         drawPred(classIds[i], confidences[i], left, top, left + width, top + height)
 
-    #classIds = list(dict.fromkeys(classIds))
+    # classIds = list(dict.fromkeys(classIds))
 
+
+duplicates = []
+duplicate_boxes = []
+
+
+def registrer_piles(img):
+    for i in range(0, len(duplicates), 2):
+        l1 = duplicate_boxes[i][0] if duplicate_boxes[i][0] < duplicate_boxes[i + 1][0] else duplicate_boxes[i + 1][0]
+        t1 = duplicate_boxes[i][1] if duplicate_boxes[i][1] < duplicate_boxes[i + 1][1] else duplicate_boxes[i + 1][1]
+        l2 = duplicate_boxes[i][0] if duplicate_boxes[i][0] > duplicate_boxes[i + 1][0] else duplicate_boxes[i + 1][0]
+        t2 = duplicate_boxes[i][1] if duplicate_boxes[i][1] > duplicate_boxes[i + 1][1] else duplicate_boxes[i + 1][1]
+        cv2.rectangle(img, (l1, t1), (l2, t2), (255, 255, 255), 4)
+    return img
 
 
 cap = cv2.VideoCapture(0)
 
-while(True):
+while (True):
 
     # Capture frame-by-frame
     ret, frame = cap.read()
@@ -102,7 +135,7 @@ while(True):
 
     cv2.imshow('frame', frame)
 
-    k= cv2.waitKey(1)
+    k = cv2.waitKey(1)
     if k % 256 == 27:
         # ESC pressed
         print("Escape hit, closing...")
@@ -117,27 +150,28 @@ while(True):
         print("Image has been split")
 
         for tile in tiles:
-
             frame = cv2.imread(tile.filename)
             blob = cv2.dnn.blobFromImage(frame, 1 / 255.0, (416, 416), (0, 0, 0), True, crop=False)
 
             net.setInput(blob)
 
-            print("Processing: "+tile.filename)
+            print("Processing: " + tile.filename)
 
             outs = net.forward(output_layers)
 
-            postprocess(frame, outs)
+            postprocess(frame, outs, tile.filename)
 
             cv2.imwrite(tile.filename, frame)
 
         print("Joining images")
-        tiles = image_slicer.open_images_in("D:\playing-card-detection-master\split_images")
+        tiles = image_slicer.open_images_in("./split_images")
         image = image_slicer.join(tiles)
         print("Saving final image")
-        image.save("bund.png")
+        image.save("sliced.png")
+        image = cv2.imread("sliced.png")
+        image = registrer_piles(image)
+        cv2.imwrite("final.png", image)
         print("Final image saved")
 
 cap.release()
 cv2.destroyAllWindows()
-
