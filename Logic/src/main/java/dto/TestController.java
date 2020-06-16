@@ -51,7 +51,8 @@ public class TestController {
                     }
 
                     System.out.println(moveString);
-                    System.out.println(gameState.countCardsInGame());
+                    //System.out.println(gameState.countCardsInGame());
+
                     Scanner scanner = new Scanner(System.in);
                     scanner.nextLine();
                 }

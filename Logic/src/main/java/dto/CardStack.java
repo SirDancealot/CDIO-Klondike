@@ -31,14 +31,10 @@ public class CardStack {
     Stack<Card> takeCards(int index){
         Stack<Card> cards = new Stack<>();
 
-        int cardsRemoved = 0;
         for (int i = stack.size()-1; i >= index; i--) {
-            cards.add(stack.elementAt(i));
-            cardsRemoved++;
+            cards.add(stack.pop());
         }
-        for (int i = 0; i < cardsRemoved; i++) {
-            stack.pop();
-        }
+
         return cards;
     }
 
