@@ -36,8 +36,8 @@ class Card:
 
 
 class GameState:
-    gameCards = [[Card(Suit.DIAMONDS, Value.KING), Card(Suit.SPADES, Value.ACE)], [], [], [], [], [], []]
-    finalCards = [None, Card(Suit.DIAMONDS, Value.ACE), None, None]
+    gameCards = [[], [], [], [], [], [], []]
+    finalCards = [None, None, None, None]
     hiddenStock = None
     shownStock = None
 
@@ -87,9 +87,23 @@ def encode_game(gameState):
 
     return return_str
 
+state = GameState()
+state.shownStock = Card(Suit.DIAMONDS, Value.FIVE)
+state.finalCards[0] = Card(Suit.DIAMONDS, Value.ACE)
+state.finalCards[1] = Card(Suit.CLUBS, Value.ACE)
+state.finalCards[2] = Card(Suit.SPADES, Value.ACE)
+state.finalCards[3] = Card(Suit.HEARTS, Value.ACE)
+state.gameCards[0].append(Card(Suit.HEARTS, Value.KING))
+state.gameCards[0].append(Card(Suit.CLUBS, Value.QUEEN))
+state.gameCards[1].append(Card(Suit.DIAMONDS, Value.TEN))
+state.gameCards[2].append(Card(Suit.SPADES, Value.TWO))
+state.gameCards[3].append(Card(Suit.CLUBS, Value.FIVE))
+state.gameCards[4].append(Card(Suit.HEARTS, Value.FIVE))
+state.gameCards[5].append(Card(Suit.SPADES, Value.TEN))
+state.gameCards[6].append(Card(Suit.HEARTS, Value.EIGHT))
 
 char = encode_card(HIDDEN)
-test = encode_game(GameState())
+test = encode_game(state)
 print("Encoded card: '" + char + "'")
 print("Encoded card as byte: '" + bin(ord(char)) + "'")
 print("test: '" + test + "'")
