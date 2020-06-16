@@ -3,13 +3,9 @@ import cv2
 import numpy as np
 import image_slicer
 
-image_slicer.calc_columns_rows(5)
-
-
-
-confThreshold = 0.5  #Confidence threshold
+confThreshold = 0.8  #Confidence threshold
 nmsThreshold = 0.4   #Non-maximum suppression threshold
-inpWidth = 608      #Width of network's input image
+inpWidth = 608     #Width of network's input image
 inpHeight = 608      #Height of network's input image
 
 
@@ -31,7 +27,7 @@ COLORS = np.random.uniform(0, 255, size=(len(classes), 3))
 # Draw the predicted bounding box
 def drawPred(classId, conf, left, top, right, bottom):
     # Draw a bounding box.
-    cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255))
+    cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 4)
 
     label = '%.2f' % conf
 
@@ -43,7 +39,7 @@ def drawPred(classId, conf, left, top, right, bottom):
     #Display the label at the top of the bounding box
     labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1)
     top = max(top, labelSize[1])
-    cv2.putText(frame, label, (left, top), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255))
+    cv2.putText(frame, label, (left, top), cv2.FONT_HERSHEY_SIMPLEX, 2, COLORS[classId], 6)
 
 
 # Remove the bounding boxes with low confidence using non-maxima suppression
@@ -52,9 +48,6 @@ def postprocess(frame, outs):
     frameHeight = frame.shape[0]
     frameWidth = frame.shape[1]
 
-    classIds = []
-    confidences = []
-    boxes = []
     # Scan through all the bounding boxes output from the network and keep only the
     # ones with high confidence scores. Assign the box's class label as the class with the highest score.
     classIds = []
@@ -74,12 +67,14 @@ def postprocess(frame, outs):
                 height = int(detection[3] * frameHeight)
                 left = int(center_x - width / 2)
                 top = int(center_y - height / 2)
+                #if classId not in classIds:
                 classIds.append(classId)
                 confidences.append(float(confidence))
                 boxes.append([left, top, width, height])
 
     # Perform non maximum suppression to eliminate redundant overlapping boxes with
     # lower confidences.
+
     indices = cv2.dnn.NMSBoxes(boxes, confidences, confThreshold, nmsThreshold)
     for i in indices:
         i = i[0]
@@ -90,7 +85,7 @@ def postprocess(frame, outs):
         height = box[3]
         drawPred(classIds[i], confidences[i], left, top, left + width, top + height)
 
-
+    #classIds = list(dict.fromkeys(classIds))
 
 
 
@@ -99,26 +94,50 @@ cap = cv2.VideoCapture(0)
 while(True):
 
     # Capture frame-by-frame
-    _, frame = cap.read()
+    ret, frame = cap.read()
 
-    # Our operations on the frame come here
-
-    blob = cv2.dnn.blobFromImage(frame,1/255.0, (416, 416), (0, 0, 0), True, crop=False)
-
-    net.setInput(blob)
-    outs = net.forward(output_layers)
-
-    postprocess(frame, outs)
-
-    # Display the resulting frame
-    cv2.imshow('frame',frame)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+    if not ret:
+        print("Error getting webcam feed")
         break
 
+    cv2.imshow('frame', frame)
 
+    k= cv2.waitKey(1)
+    if k % 256 == 27:
+        # ESC pressed
+        print("Escape hit, closing...")
+        break
+    elif k % 256 == 32:
+        # SPACE pressed
+        detected_cards = list()
+        print("Space pressed")
+        frame = cv2.imread("./IMG_3694.JPG")
+        cv2.imwrite("./split_images/image.png", frame)
+        tiles = image_slicer.slice("./split_images/image.png", 4, True)
+        print("Image has been split")
 
+        for tile in tiles:
+
+            frame = cv2.imread(tile.filename)
+            blob = cv2.dnn.blobFromImage(frame, 1 / 255.0, (416, 416), (0, 0, 0), True, crop=False)
+
+            net.setInput(blob)
+
+            print("Processing: "+tile.filename)
+
+            outs = net.forward(output_layers)
+
+            postprocess(frame, outs)
+
+            cv2.imwrite(tile.filename, frame)
+
+        print("Joining images")
+        tiles = image_slicer.open_images_in("D:\playing-card-detection-master\split_images")
+        image = image_slicer.join(tiles)
+        print("Saving final image")
+        image.save("bund.png")
+        print("Final image saved")
+
+cap.release()
 cv2.destroyAllWindows()
-
-
-
 
