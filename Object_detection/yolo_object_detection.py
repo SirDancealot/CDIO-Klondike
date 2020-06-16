@@ -47,6 +47,8 @@ boxes_o = []
 
 def postprocess(frame, outs, filename):
     _, _, y, x = filename.split("_")
+    a, b = x.split(".")
+    x = a
     frameHeight = frame.shape[0]
     frameWidth = frame.shape[1]
 
@@ -76,10 +78,11 @@ def postprocess(frame, outs, filename):
                     box1 = boxes_o[i]
                     box2 = [left, top, width, height, x, y]
 
-                    #if box1[4] == "02":
-                    #    box1[0] += frameWidth
-                    #if box2[4] == "02":
-                    #    box2[0] += frameWidth
+                    print("y="+y +" : "+"x="+x)
+                    if box1[4] == "02":
+                        box1[0] += frameWidth
+                    if box2[4] == "02":
+                        box2[0] += frameWidth
                     if box1[5] == "02":
                         box1[1] += frameHeight
                     if box2[5] == "02":
