@@ -4,7 +4,7 @@ public class Card {
     private static final String[] numberNames = {"Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King"};
 
     public enum Suit {
-        HEARTS, SPADES, DIAMONDS, CLUBS
+        Hidden, HEARTS, SPADES, DIAMONDS, CLUBS
     }
 
     public enum Color {

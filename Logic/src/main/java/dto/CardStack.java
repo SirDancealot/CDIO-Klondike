@@ -39,8 +39,8 @@ public class CardStack {
     }
 
     void addCards(Stack<Card> cards){
-        int cardSize = cards.size();
-        for (int i = 0; i < cardSize; i++) {
+        int size = cards.size();
+        for (int i = 0; i < size; i++) {
             stack.add(cards.pop());
         }
     }
