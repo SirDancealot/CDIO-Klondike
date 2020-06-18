@@ -49,6 +49,8 @@ testCard = Card(Suit.DIAMONDS, Value.ACE)
 def encode_card(card):
     if card is None:
         return chr(0b0)
+    print(card.value)
+    print(card.suit)
     num = (card.value & 0b1111) << 4
     suit = card.suit & 0b1111
     return chr(num + suit)
@@ -88,19 +90,19 @@ def encode_game(gameState):
     return return_str
 
 state = GameState()
-state.shownStock = Card(Suit.DIAMONDS, Value.FIVE)
-state.finalCards[0] = Card(Suit.DIAMONDS, Value.ACE)
-state.finalCards[1] = Card(Suit.CLUBS, Value.ACE)
-state.finalCards[2] = Card(Suit.SPADES, Value.ACE)
-state.finalCards[3] = Card(Suit.HEARTS, Value.ACE)
-state.gameCards[0].append(Card(Suit.HEARTS, Value.KING))
-state.gameCards[0].append(Card(Suit.CLUBS, Value.QUEEN))
-state.gameCards[1].append(Card(Suit.DIAMONDS, Value.TEN))
-state.gameCards[2].append(Card(Suit.SPADES, Value.TWO))
-state.gameCards[3].append(Card(Suit.CLUBS, Value.FIVE))
-state.gameCards[4].append(Card(Suit.HEARTS, Value.FIVE))
-state.gameCards[5].append(Card(Suit.SPADES, Value.TEN))
-state.gameCards[6].append(Card(Suit.HEARTS, Value.EIGHT))
+#state.shownStock = Card(Suit.DIAMONDS, Value.FIVE)
+#state.finalCards[0] = Card(Suit.DIAMONDS, Value.ACE)
+#state.finalCards[1] = Card(Suit.CLUBS, Value.ACE)
+#state.finalCards[2] = Card(Suit.SPADES, Value.ACE)
+#state.finalCards[3] = Card(Suit.HEARTS, Value.ACE)
+#state.gameCards[0].append(Card(Suit.HEARTS, Value.KING))
+#state.gameCards[0].append(Card(Suit.CLUBS, Value.QUEEN))
+#state.gameCards[1].append(Card(Suit.DIAMONDS, Value.TEN))
+#state.gameCards[2].append(Card(Suit.SPADES, Value.TWO))
+#state.gameCards[3].append(Card(Suit.CLUBS, Value.FIVE))
+#state.gameCards[4].append(Card(Suit.HEARTS, Value.FIVE))
+#state.gameCards[5].append(Card(Suit.SPADES, Value.TEN))
+#state.gameCards[6].append(Card(Suit.HEARTS, Value.EIGHT))
 
 char = encode_card(HIDDEN)
 test = encode_game(state)

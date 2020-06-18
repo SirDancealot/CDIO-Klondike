@@ -2,6 +2,9 @@ import cv2
 import numpy as np
 import image_slicer
 
+from Object_detection.encode import *
+
+
 confThreshold = 0.8  # Confidence threshold
 nmsThreshold = 0.4  # Non-maximum suppression threshold
 inpWidth = 608  # Width of network's input image
@@ -124,18 +127,20 @@ lowest_y_box = None
 
 
 def registrer_piles(img):
+    gameState = GameState()
     global lowest_y_box
     if lowest_y_box is None:
         lowest_y_box = [0xffffffff, 0xffffffff]
         for box in duplicate_boxes:
             if box[1] < lowest_y_box[1]:
                 lowest_y_box = box
-    print(lowest_y_box)
+    #print(lowest_y_box)
     box_height = int(lowest_y_box[3]*1.25)
     box_height_range = range(lowest_y_box[1], lowest_y_box[1] + box_height)
     row_width = None
     row_x = []
     row_final = [[], [], [], [], [], [], []]
+    row_final_top = []
     for i in range(0, len(duplicates), 2):
         l1 = duplicate_boxes[i][0] if duplicate_boxes[i][0] < duplicate_boxes[i + 1][0] else duplicate_boxes[i + 1][0]
         t1 = duplicate_boxes[i][1] if duplicate_boxes[i][1] < duplicate_boxes[i + 1][1] else duplicate_boxes[i + 1][1]
@@ -153,15 +158,50 @@ def registrer_piles(img):
                 if row_x[i] in range(tup[1][0] - row_width, tup[1][0] + row_width):
                     row_final[i].append(tup)
         else:
-            # handle top cards
+            row_final_top.append(tup)
             pass
 
+    row_count = 0
     for row in row_final:
         row.sort(key=lambda tup: tup[1][1])
+        for i in range(len(row)):
+            rank_suit = classes[row[i][0]]
+            suit = None
+            if rank_suit[1] == 'h':
+                suit = 1
+            if rank_suit[1] == 's':
+                suit = 2
+            if rank_suit[1] == 'd':
+                suit = 3
+            if rank_suit[1] == 'c':
+                suit = 4
 
-    for row in row_final:
-        print(row)
+            rank = rank_suit[0]
 
+            gameState.gameCards[row_count].append(Card(suit, Value(int(rank))))
+
+        row_count = row_count + 1
+
+    for i in range(len(row_final_top)):
+        rank_suit = classes[row_final_top[i][0]]
+        suit = None
+        if rank_suit[1] == 'h':
+            suit = 1
+        if rank_suit[1] == 's':
+            suit = 2
+        if rank_suit[1] == 'd':
+            suit = 3
+        if rank_suit[1] == 'c':
+            suit = 4
+
+        rank = rank_suit[0]
+
+        if i == 0:
+            gameState.shownStock = Card(suit, Value(int(rank)))
+        else:
+            gameState.finalCards[i-1] = Card(Suit, Value(int(rank)))
+
+    encode_game(gameState)
     return img
 
 
