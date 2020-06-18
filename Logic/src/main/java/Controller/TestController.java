@@ -1,4 +1,6 @@
-package dto;
+package Controller;
+
+import dto.*;
 
 import java.util.Scanner;
 

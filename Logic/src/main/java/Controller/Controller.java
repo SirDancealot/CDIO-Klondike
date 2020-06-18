@@ -1,4 +1,4 @@
-package dto;
+package Controller;
 
 import java.util.Scanner;
 

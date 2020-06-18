@@ -1,4 +1,9 @@
-package dto;
+package Controller;
+
+import dto.Card;
+import dto.FinishStack;
+import dto.GameStack;
+import dto.GameState;
 
 public class LogicController {
     GameState gameState;
