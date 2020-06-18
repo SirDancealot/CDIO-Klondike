@@ -7,7 +7,7 @@ public class TestController {
 
 
         TestController testController = new TestController();
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 1000; i++) {
             testController.setupGame();
             testController.runGame();
         }
@@ -17,24 +17,27 @@ public class TestController {
 
     int wonGames = 0;
     int lostGames = 0;
-
     int[] randomOrder = {2,4,7,9,8,11,5,1,13,6,12,3,10,10,3,12,6,13,1,5,11,8,9,7,4,2,1,13,2,12,3,11,4,10,5,9,6,8,7,7,6,8,5,9,4,10,3,11,2,12,13,1};
-    GameState gameState;
+    LogicController logicController;
 
     private String getGames(){
         return "Won: " + wonGames + " Lost: " + lostGames;
+    }
+
+    public TestController(){
+        logicController = new LogicController();
     }
 
     private void runGame(){
         boolean running = true;
         boolean moveSinceLastStockTurn = true;
         while(running){
-            if(gameState.gameWon()){
+            if(logicController.gameWon()){
                 System.out.println("YOU WON!");
                 wonGames++;
                 break;
             }else {
-                String moveString = gameState.makeMoveTest();
+                String moveString = logicController.makeMoveTest();
 
                 if (moveString == null) {
                     running = false;
@@ -51,18 +54,18 @@ public class TestController {
                         moveSinceLastStockTurn = false;
                     }
 
-                    System.out.println(moveString);
+                    //System.out.println(moveString);
                     //System.out.println(gameState.countCardsInGame());
 
                     Scanner scanner = new Scanner(System.in);
-                    scanner.nextLine();
+                    //scanner.nextLine();
                 }
             }
         }
     }
 
     private void setupGame(){
-        gameState = new GameState();
+        logicController.gameState = new GameState();
         CardStack stock = makeStock();
         stock.shuffle();
         makeGameStateFromStock(stock);
@@ -115,8 +118,8 @@ public class TestController {
                 }
             }
         }
-        gameState.setGameStacks(gameStacks);
-        gameState.setStock(stock);
+        logicController.gameState.setGameStacks(gameStacks);
+        logicController.gameState.setStock(stock);
     }
 
 
