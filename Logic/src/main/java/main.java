@@ -4,9 +4,12 @@ import dto.GameState;
 import parser.CardDeck;
 import parser.DeckDecoder;
 
+import java.io.*;
+import java.net.Socket;
+
 public class main {
-    public static void main(String[] args) {
-        CardDeck deck = CardDeck.getINSTANCE();
+    public static void main(String[] args) throws IOException, InterruptedException {
+       /* CardDeck deck = CardDeck.getINSTANCE();
         GameState game = new GameState();
         GameStack[] gameStacks = game.getGameStacks();
 
@@ -28,6 +31,40 @@ public class main {
             gameStacks[1].addCard(c);
         }
 
-        System.out.println(game.getGameStacks()[1]);
+        System.out.println(game.getGameStacks()[1]);*/
+
+
+        Socket socket = new Socket("localhost", 65432);
+
+        BufferedWriter sockOut = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+        BufferedReader sockIn = new BufferedReader(new BufferedReader(new InputStreamReader(socket.getInputStream())));
+
+        BufferedReader consoleIn = new BufferedReader(new InputStreamReader(System.in));
+
+        for (; ; ) {
+           /* System.out.println("Type something to send to the server:");
+            String line = consoleIn.readLine();
+            if (line == null) {
+                break;
+            }
+
+            sockOut.write(line, 0, line.length());
+            sockOut.newLine();
+            sockOut.flush();
+            */
+
+            if (sockIn.ready()) {
+                String response = sockIn.readLine();
+                if (response == null) {
+                    System.out.println("Remote process closed the connection.");
+                    break;
+                }
+
+                System.out.println("Got back this response");
+                System.out.println(response);
+
+                System.out.println();
+            }
+        }
     }
 }

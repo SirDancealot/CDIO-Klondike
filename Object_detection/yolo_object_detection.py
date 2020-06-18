@@ -1,13 +1,29 @@
 import cv2
 import numpy as np
 import image_slicer
+import socket
+import threading
+import select
 
-from encode import *
+from Object_detection.encode import *
 
 confThreshold = 0.8  # Confidence threshold
 nmsThreshold = 0.4  # Non-maximum suppression threshold
 inpWidth = 608  # Width of network's input image
 inpHeight = 608  # Height of network's input image
+
+HOST = "localhost"
+PORT = 65432
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+print("socket created")
+try:
+    s.bind((HOST, PORT))
+except socket.error as err:
+    print('Bind failed. Error Code : ' .format(err))
+
+s.listen(5)
+print("socket listening")
 
 # Load Yolo
 net = cv2.dnn.readNet("yolov3_training_last.weights", "yolov3_training.cfg")
@@ -125,7 +141,7 @@ duplicate_boxes = []
 lowest_y_box = None
 
 
-def registrer_piles(img):
+def registrer_piles():
     gameState = GameState()
     global lowest_y_box
     if lowest_y_box is None:
@@ -148,7 +164,7 @@ def registrer_piles(img):
         row_width = int((l2 - l1) / 2)
         if True not in np.in1d(row_x, range(l1 - row_width, l1 + row_width)):
             row_x.append(l1)
-        cv2.rectangle(img, (l1, t1), (l2, t2), (255, 255, 255), 4)
+        # cv2.rectangle(img, (l1, t1), (l2, t2), (255, 255, 255), 4)
     row_x.sort()
     # singles.sort(key=lambda tup: tup[1][1])
     for tup in singles:
@@ -178,11 +194,11 @@ def registrer_piles(img):
             gameState.finalCards[i - 1] = class_to_card(rank_suit)
 
     s = encode_game(gameState)
-    print(s)
-    for c in s:
-        print(bin(ord(c)))
+    #print(s)
+    #for c in s:
+      #  print(bin(ord(c)))
 
-    return img
+    return s
 
 
 def class_to_card(cls):
@@ -224,7 +240,9 @@ def class_to_card(cls):
 
 cap = cv2.VideoCapture(0)
 
+
 while (True):
+
 
     # Capture frame-by-frame
     ret, frame = cap.read()
@@ -269,9 +287,19 @@ while (True):
         print("Saving final image")
         image.save("sliced.png")
         image = cv2.imread("sliced.png")
-        image = registrer_piles(image)
+        #image = registrer_piles(image)
         cv2.imwrite("final.png", image)
         print("Final image saved")
+
+        conn, addr = s.accept()
+        conn.send(registrer_piles().encode())
+        conn.close()
+
+        singles = []
+        duplicates = []
+        duplicate_boxes = []
+        lowest_y_box = None
+
 
 cap.release()
 cv2.destroyAllWindows()
