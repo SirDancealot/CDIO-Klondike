@@ -7,14 +7,13 @@ import java.util.Scanner;
 public class TestController {
     public static void main(String[] args){
 
-
         TestController testController = new TestController();
         for (int i = 0; i < 1000; i++) {
             testController.setupGame();
             testController.runGame();
         }
         System.out.println(testController.getGames());
-
+        System.exit(0);
     }
 
     int wonGames = 0;

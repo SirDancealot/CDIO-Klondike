@@ -36,9 +36,8 @@ class Card:
 
 
 class GameState:
-    gameCards = [[Card(Suit.DIAMONDS, Value.KING), Card(Suit.SPADES, Value.ACE)], [], [], [], [], [], []]
-    finalCards = [None, Card(Suit.DIAMONDS, Value.ACE), None, None]
-    hiddenStock = None
+    gameCards = [[], [], [], [], [], [], []]
+    finalCards = [None, None, None, None]
     shownStock = None
 
 
@@ -75,11 +74,6 @@ def encode_game(gameState):
     for i in range(4):
         return_str += encode_card(gameState.finalCards[i])
 
-    if gameState.hiddenStock is None:
-        return_str += chr(0xFF)
-    else:
-        return_str += encode_card(gameState.hiddenStock)
-
     if gameState.shownStock is None:
         return_str += chr(0xFF)
     else:
@@ -87,12 +81,3 @@ def encode_game(gameState):
 
     return return_str
 
-
-char = encode_card(HIDDEN)
-test = encode_game(GameState())
-print("Encoded card: '" + char + "'")
-print("Encoded card as byte: '" + bin(ord(char)) + "'")
-print("test: '" + test + "'")
-
-for c in test:
-    print(bin(ord(c)))
