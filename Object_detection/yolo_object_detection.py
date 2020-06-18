@@ -2,8 +2,7 @@ import cv2
 import numpy as np
 import image_slicer
 
-from Object_detection.encode import *
-
+from encode import *
 
 confThreshold = 0.8  # Confidence threshold
 nmsThreshold = 0.4  # Non-maximum suppression threshold
@@ -16,7 +15,7 @@ net = cv2.dnn.readNet("yolov3_training_last.weights", "yolov3_training.cfg")
 # Name custom object
 classes = ["Ah", "Kh", "Qh", "Jh", "10h", "9h", "8h", "7h", "6h", "5h", "4h", "3h", "2h", "Ad", "Kd", "Qd", "Jd", "10d",
            "9d", "8d", "7d",
-           "6d", "5d", "4d", "3d", "2d", "Ac", "Kc", "Qc", "Jc", "10c", "9c", "8c", "c7", "c6", "c5", "c4", "c3", "c2",
+           "6d", "5d", "4d", "3d", "2d", "Ac", "Kc", "Qc", "Jc", "10c", "9c", "8c", "7c", "6c", "5c", "4c", "3c", "2c",
            "As", "Ks", "Qs",
            "Js", "10s", "9s", "8s", "7s", "6s", "5s", "4s", "3s", "2s"]
 
@@ -134,8 +133,8 @@ def registrer_piles(img):
         for box in duplicate_boxes:
             if box[1] < lowest_y_box[1]:
                 lowest_y_box = box
-    #print(lowest_y_box)
-    box_height = int(lowest_y_box[3]*1.25)
+    # print(lowest_y_box)
+    box_height = int(lowest_y_box[3] * 1.25)
     box_height_range = range(lowest_y_box[1], lowest_y_box[1] + box_height)
     row_width = None
     row_x = []
@@ -166,43 +165,61 @@ def registrer_piles(img):
         row.sort(key=lambda tup: tup[1][1])
         for i in range(len(row)):
             rank_suit = classes[row[i][0]]
-            suit = None
-            if rank_suit[1] == 'h':
-                suit = 1
-            if rank_suit[1] == 's':
-                suit = 2
-            if rank_suit[1] == 'd':
-                suit = 3
-            if rank_suit[1] == 'c':
-                suit = 4
-
-            rank = rank_suit[0]
-
-            gameState.gameCards[row_count].append(Card(suit, Value(int(rank))))
+            gameState.gameCards[row_count].append(class_to_card(rank_suit))
 
         row_count = row_count + 1
 
+    row_final_top.sort(key=lambda tup: tup[1][0])
     for i in range(len(row_final_top)):
         rank_suit = classes[row_final_top[i][0]]
-        suit = None
-        if rank_suit[1] == 'h':
-            suit = 1
-        if rank_suit[1] == 's':
-            suit = 2
-        if rank_suit[1] == 'd':
-            suit = 3
-        if rank_suit[1] == 'c':
-            suit = 4
-
-        rank = rank_suit[0]
-
         if i == 0:
-            gameState.shownStock = Card(suit, Value(int(rank)))
+            gameState.shownStock = class_to_card(rank_suit)
         else:
-            gameState.finalCards[i-1] = Card(Suit, Value(int(rank)))
+            gameState.finalCards[i - 1] = class_to_card(rank_suit)
 
-    encode_game(gameState)
+    s = encode_game(gameState)
+    print(s)
+    for c in s:
+        print(bin(ord(c)))
+
     return img
+
+
+def class_to_card(cls):
+    if len(cls) == 3:
+        val_c = cls[0:2]
+        suit_c = cls[2]
+    else:
+        val_c = cls[0]
+        suit_c = cls[1]
+
+    v_switch = {
+        '0': 0,
+        'A': 1,
+        '2': 2,
+        '3': 3,
+        '4': 4,
+        '5': 5,
+        '6': 6,
+        '7': 7,
+        '8': 8,
+        '9': 9,
+        '10': 10,
+        'J': 11,
+        'Q': 12,
+        'K': 13,
+    }
+    val = v_switch[val_c]
+
+    s_switch = {
+        '_': 0,
+        'h': 1,
+        's': 2,
+        'd': 3,
+        'c': 4
+    }
+    suit = s_switch[suit_c]
+    return Card(suit, val)
 
 
 cap = cv2.VideoCapture(0)
@@ -227,7 +244,7 @@ while (True):
         # SPACE pressed
         detected_cards = list()
         print("Space pressed")
-        frame = cv2.imread("./IMG_3694.JPG")
+        frame = cv2.imread("./JPEG_20200618_154748.jpg")
         cv2.imwrite("./split_images/image.png", frame)
         tiles = image_slicer.slice("./split_images/image.png", 4, True)
         print("Image has been split")

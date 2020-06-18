@@ -10,7 +10,17 @@ public class main {
         GameState game = new GameState();
         GameStack[] gameStacks = game.getGameStacks();
 
-        DeckDecoder.decode("\u0002ÑÄ\u0001£\u0001\"\u0001T\u0001Q\u0001¢\u0001\u0081\u0013\u0014\u0012\u0011ÿS");
+        String decodeString = "\u0001\u0011\u0001\u0094\u0001b\u0001\u0091\u0001c\u0003AÂr\u0005\u0084£ÁC!aQ2\"3";
+
+        System.out.println("Printing Bytes");
+        for (byte b : decodeString.getBytes()) {
+            System.out.println(Integer.toBinaryString(b));
+        }
+
+        System.out.println("Decoding String");
+        DeckDecoder.decode(decodeString);
+
+
 
         for (int i = 0; i < 5; i++) {
             Card c = deck.draw();
