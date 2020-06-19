@@ -1,5 +1,5 @@
 import socket
-import select
+
 
 class Comm:
     HP_TUP = ("localhost", 65432)
@@ -22,9 +22,6 @@ class Comm:
         data = self.conn.recv(4096)
         self.conn.setblocking(False)
         return data
-
-    def is_ready(self):
-       return select.select([self.conn], [], [], 10)[0]
 
     def close(self):
         self.conn.shutdown(socket.SHUT_RDWR)

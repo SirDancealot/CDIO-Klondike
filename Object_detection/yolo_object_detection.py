@@ -1,8 +1,5 @@
 import cv2
 import numpy as np
-import image_slicer
-import threading
-import select
 
 from encode import *
 from comm import Comm
@@ -11,8 +8,7 @@ confThreshold = 0.7  # Confidence threshold
 nmsThreshold = 0.4  # Non-maximum suppression threshold
 inpWidth = 608  # Width of network's input image
 inpHeight = 608  # Height of network's input image
-img_name = "./v1.jpg"
-
+img_name = "./v6.jpg"
 
 # Load Yolo
 net = cv2.dnn.readNet("yolov3_training_last.weights", "yolov3_training.cfg")
@@ -52,10 +48,7 @@ classIds_o = []
 boxes_o = []
 
 
-def postprocess(_frame, _outs, filename):
-    _, _, y, x = filename.split("_")
-    a, b = x.split(".")
-    x = a
+def postprocess(_frame, _outs):
     frame_height = _frame.shape[0]
     frame_width = _frame.shape[1]
 
@@ -83,31 +76,18 @@ def postprocess(_frame, _outs, filename):
                     duplicates.append(class_id)
                     i = classIds_o.index(class_id)
                     box1 = boxes_o[i]
-                    box2 = [left, top, width, height, x, y]
-
-                    if box1[4] == "02":
-                        box1[0] += frame_width
-                    if box2[4] == "02":
-                        box2[0] += frame_width
-                    if box1[5] == "02":
-                        box1[1] += frame_height
-                    if box2[5] == "02":
-                        box2[1] += frame_height
+                    box2 = [left, top, width, height]
 
                     duplicate_boxes.append(box1)
                     duplicate_boxes.append(box2)
                 else:
-                    box = [left, top, width, height, x, y]
-                    if box[4] == "02":
-                        box[0] += frame_width
-                    if box[5] == "02":
-                        box[1] += frame_height
+                    box = [left, top, width, height]
                     singles.append((class_id, box))
                 class_ids.append(class_id)
                 classIds_o.append(class_id)
                 confidences.append(float(confidence))
                 boxes.append([left, top, width, height])
-                boxes_o.append([left, top, width, height, x, y])
+                boxes_o.append([left, top, width, height])
 
     # Perform non maximum suppression to eliminate redundant overlapping boxes with
     # lower confidences.
@@ -120,8 +100,6 @@ def postprocess(_frame, _outs, filename):
         width = box[2]
         height = box[3]
         draw_pred(class_ids[i], confidences[i], left, top, left + width, top + height)
-
-    # classIds = list(dict.fromkeys(classIds))
 
 
 singles = []
@@ -138,7 +116,6 @@ def registrer_piles(img_width):
         for box in duplicate_boxes:
             if box[1] < lowest_y_box[1]:
                 lowest_y_box = box
-    # print(lowest_y_box)
     box_height = int(lowest_y_box[3] * 1.25)
     box_height_range = range(lowest_y_box[1], lowest_y_box[1] + box_height)
     row_width = None
@@ -151,7 +128,6 @@ def registrer_piles(img_width):
         row_width = int((l2 - l1) / 2)
         if True not in np.in1d(row_x_cords, range(l1 - row_width, l1 + row_width)):
             row_x_cords.append(l1)
-        # cv2.rectangle(img, (l1, t1), (l2, t2), (255, 255, 255), 4)
     row_x_cords.sort()
     for tup in singles:
         if tup[1][1] not in box_height_range:
@@ -159,7 +135,6 @@ def registrer_piles(img_width):
                 if row_x_cords[i] in range(tup[1][0] - row_width, tup[1][0] + row_width):
                     game_rows[i].append(tup)
         else:
-            # TODO ensure 5 cards are added, and make sure of their x-coordinate
             top_cards.append(tup)
             pass
 
@@ -173,20 +148,17 @@ def registrer_piles(img_width):
         row_count = row_count + 1
 
     top_cards.sort(key=lambda tup: tup[1][0])
-    if top_cards[0][1][0] > int(img_width/3):
+    if top_cards[0][1][0] > int(img_width / 3):
         top_cards.insert(0, None)
     for i in range(len(top_cards)):
-        rank_suit = classes[top_cards[i][0]]
-        if i == 0:
-            if rank_suit is not None:
+        if top_cards[i] is not None:
+            rank_suit = classes[top_cards[i][0]]
+            if i == 0:
                 game_state.shownStock = class_to_card(rank_suit)
-        else:
-            game_state.finalCards[i - 1] = class_to_card(rank_suit)
+            else:
+                game_state.finalCards[i - 1] = class_to_card(rank_suit)
 
     s = encode_game(game_state)
-    #print(s)
-    #for c in s:
-      #  print(bin(ord(c)))
 
     return s
 
@@ -232,7 +204,7 @@ cap = cv2.VideoCapture(0)
 comm = Comm()
 
 while (True):
-    #if comm.is_ready():
+    # if comm.is_ready():
     response = comm.recv().decode("utf-8")
     print(response)
     # Capture frame-by-frame
@@ -257,30 +229,13 @@ while (True):
         print("Space pressed")
         frame = cv2.imread(img_name)
         cv2.imwrite("./split_images/image.png", frame)
-        tiles = image_slicer.slice("./split_images/image.png", 4, True)
-        print("Image has been split")
+        blob = cv2.dnn.blobFromImage(frame, 1 / 255.0, (832, 1024), (0, 0, 0), True, crop=False)
+        net.setInput(blob)
+        outs = net.forward(output_layers)
+        postprocess(frame, outs)
+        cv2.imwrite("./registrered.png", frame)
 
-        for tile in tiles:
-            frame = cv2.imread(tile.filename)
-            blob = cv2.dnn.blobFromImage(frame, 1 / 255.0, (832, 832), (0, 0, 0), True, crop=False)
-
-            net.setInput(blob)
-
-            print("Processing: " + tile.filename)
-
-            outs = net.forward(output_layers)
-
-            postprocess(frame, outs, tile.filename)
-
-            cv2.imwrite(tile.filename, frame)
-
-        print("Joining images")
-        tiles = image_slicer.open_images_in("./split_images")
-        image = image_slicer.join(tiles)
-        print("Saving final image")
-        image.save("sliced.png")
-        # image = cv2.imread("sliced.png")
-        comm.send(registrer_piles(image.width))
+        comm.send(registrer_piles(frame.shape[1]))
         # cv2.imwrite("final.png", image)
         print("Final image saved")
 

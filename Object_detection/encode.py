@@ -59,7 +59,6 @@ def encode_game(gameState):
 
     byte_arr = bytearray()
 
-    return_str = ""
     gCardsLen = []
 
     for i in range(len(gameState.gameCards)):
@@ -69,21 +68,19 @@ def encode_game(gameState):
             gCardsLen.append(len(gameState.gameCards[i]))
 
     for i in range(len(gCardsLen)):
-        # return_str += chr(gCardsLen[i])
         byte_arr.append(gCardsLen[i])
         for j in range(gCardsLen[i]):
-            # return_str += encode_card(gameState.gameCards[i][j])
             byte_arr.append(encode_card(gameState.gameCards[i][j]))
 
     for i in range(4):
-        # return_str += encode_card(gameState.finalCards[i])
-        byte_arr.append(encode_card(gameState.finalCards[i]))
+        if gameState.finalCards[i] is None:
+            byte_arr.append(0)
+        else:
+            byte_arr.append(encode_card(gameState.finalCards[i]))
 
     if gameState.shownStock is None:
-        # return_str += chr(0xFF)
-        byte_arr.append(0x00)
+        byte_arr.append(0)
     else:
-        # return_str += encode_card(gameState.shownStock)
         byte_arr.append(encode_card(gameState.shownStock))
 
     byte_arr.append(0xFF)

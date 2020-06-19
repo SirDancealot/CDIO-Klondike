@@ -8,8 +8,14 @@ import java.io.*;
 import java.net.Socket;
 
 public class main {
-    public static void main(String[] args) throws IOException, InterruptedException {
-        Socket socket = new Socket("localhost", 65432);
+    public static void main(String[] args) throws IOException{
+        Socket socket = null;
+        while (socket == null) {
+            try {
+                socket = new Socket("localhost", 65432);
+            } catch (IOException ignored) {
+            }
+        }
         GameState game;
 
         BufferedWriter sockOut = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
