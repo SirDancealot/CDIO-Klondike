@@ -7,10 +7,11 @@ import select
 from encode import *
 from comm import Comm
 
-confThreshold = 0.8  # Confidence threshold
+confThreshold = 0.7  # Confidence threshold
 nmsThreshold = 0.4  # Non-maximum suppression threshold
 inpWidth = 608  # Width of network's input image
 inpHeight = 608  # Height of network's input image
+img_name = "./v1.jpg"
 
 
 # Load Yolo
@@ -129,7 +130,7 @@ duplicate_boxes = []
 lowest_y_box = None
 
 
-def registrer_piles():
+def registrer_piles(img_width):
     game_state = GameState()
     global lowest_y_box
     if lowest_y_box is None:
@@ -141,29 +142,29 @@ def registrer_piles():
     box_height = int(lowest_y_box[3] * 1.25)
     box_height_range = range(lowest_y_box[1], lowest_y_box[1] + box_height)
     row_width = None
-    row_x = []
-    row_final = [[], [], [], [], [], [], []]
-    row_final_top = []
+    row_x_cords = []
+    game_rows = [[], [], [], [], [], [], []]
+    top_cards = []
     for i in range(0, len(duplicates), 2):
         l1 = duplicate_boxes[i][0] if duplicate_boxes[i][0] < duplicate_boxes[i + 1][0] else duplicate_boxes[i + 1][0]
         l2 = duplicate_boxes[i][0] if duplicate_boxes[i][0] > duplicate_boxes[i + 1][0] else duplicate_boxes[i + 1][0]
         row_width = int((l2 - l1) / 2)
-        if True not in np.in1d(row_x, range(l1 - row_width, l1 + row_width)):
-            row_x.append(l1)
+        if True not in np.in1d(row_x_cords, range(l1 - row_width, l1 + row_width)):
+            row_x_cords.append(l1)
         # cv2.rectangle(img, (l1, t1), (l2, t2), (255, 255, 255), 4)
-    row_x.sort()
-    # singles.sort(key=lambda tup: tup[1][1])
+    row_x_cords.sort()
     for tup in singles:
         if tup[1][1] not in box_height_range:
-            for i in range(len(row_x)):
-                if row_x[i] in range(tup[1][0] - row_width, tup[1][0] + row_width):
-                    row_final[i].append(tup)
+            for i in range(len(row_x_cords)):
+                if row_x_cords[i] in range(tup[1][0] - row_width, tup[1][0] + row_width):
+                    game_rows[i].append(tup)
         else:
-            row_final_top.append(tup)
+            # TODO ensure 5 cards are added, and make sure of their x-coordinate
+            top_cards.append(tup)
             pass
 
     row_count = 0
-    for row in row_final:
+    for row in game_rows:
         row.sort(key=lambda tup: tup[1][1])
         for i in range(len(row)):
             rank_suit = classes[row[i][0]]
@@ -171,11 +172,14 @@ def registrer_piles():
 
         row_count = row_count + 1
 
-    row_final_top.sort(key=lambda tup: tup[1][0])
-    for i in range(len(row_final_top)):
-        rank_suit = classes[row_final_top[i][0]]
+    top_cards.sort(key=lambda tup: tup[1][0])
+    if top_cards[0][1][0] > int(img_width/3):
+        top_cards.insert(0, None)
+    for i in range(len(top_cards)):
+        rank_suit = classes[top_cards[i][0]]
         if i == 0:
-            game_state.shownStock = class_to_card(rank_suit)
+            if rank_suit is not None:
+                game_state.shownStock = class_to_card(rank_suit)
         else:
             game_state.finalCards[i - 1] = class_to_card(rank_suit)
 
@@ -228,8 +232,9 @@ cap = cv2.VideoCapture(0)
 comm = Comm()
 
 while (True):
-    if comm.is_ready():
-        print(comm.recv().decode("utf-8"))
+    #if comm.is_ready():
+    response = comm.recv().decode("utf-8")
+    print(response)
     # Capture frame-by-frame
     ret, frame = cap.read()
 
@@ -239,23 +244,25 @@ while (True):
 
     cv2.imshow('frame', frame)
 
-    k = cv2.waitKey(1)
-    if k % 256 == 27:
+    # k = cv2.waitKey(1)
+    # if k % 256 == 27:
+    if response == "stop":
         # ESC pressed
         print("Escape hit, closing...")
         break
-    elif k % 256 == 32:
+    # elif k % 256 == 32:
+    else:
         # SPACE pressed
         detected_cards = list()
         print("Space pressed")
-        frame = cv2.imread("./JPEG_20200618_154748.jpg")
+        frame = cv2.imread(img_name)
         cv2.imwrite("./split_images/image.png", frame)
         tiles = image_slicer.slice("./split_images/image.png", 4, True)
         print("Image has been split")
 
         for tile in tiles:
             frame = cv2.imread(tile.filename)
-            blob = cv2.dnn.blobFromImage(frame, 1 / 255.0, (416, 416), (0, 0, 0), True, crop=False)
+            blob = cv2.dnn.blobFromImage(frame, 1 / 255.0, (832, 832), (0, 0, 0), True, crop=False)
 
             net.setInput(blob)
 
@@ -272,9 +279,9 @@ while (True):
         image = image_slicer.join(tiles)
         print("Saving final image")
         image.save("sliced.png")
-        image = cv2.imread("sliced.png")
-        comm.send(registrer_piles())
-        cv2.imwrite("final.png", image)
+        # image = cv2.imread("sliced.png")
+        comm.send(registrer_piles(image.width))
+        # cv2.imwrite("final.png", image)
         print("Final image saved")
 
         singles = []

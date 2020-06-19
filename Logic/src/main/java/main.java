@@ -38,11 +38,6 @@ public class main {
                 break;
         }
 
-        for (byte b :
-                data) {
-            System.out.println(Integer.toBinaryString(b));
-        }
-
         System.out.println("Decoding data");
         game = DeckDecoder.decode(data);
 

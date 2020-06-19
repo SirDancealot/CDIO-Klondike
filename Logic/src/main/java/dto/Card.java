@@ -14,7 +14,7 @@ public class Card {
     private Color color;
     private Suit suit;
     private int cardValue;
-    private boolean hidden = true;
+    private boolean hidden = false;
     private boolean isKnown = false;
 
     public boolean isKnown() {
