@@ -8,6 +8,7 @@ import model.dto.Card;
 import model.dto.GameState;
 import view.MainApp;
 
+import java.lang.reflect.Array;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ViewController {
@@ -112,7 +113,6 @@ public class ViewController {
 
     @FXML
     private void initialize() {
-
         finishStack4Suit.setCellValueFactory(cellData -> cellData.getValue().getSuit());
         finishStack4Number.setCellValueFactory(cellData -> cellData.getValue().getStringValue());
 

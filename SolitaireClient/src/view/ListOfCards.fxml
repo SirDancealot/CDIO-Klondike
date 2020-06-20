@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import java.net.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.shape.*?>
@@ -32,7 +33,7 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
-      <TextArea fx:id="moveString" layoutX="82.0" layoutY="759.0" prefHeight="27.0" prefWidth="1136.0" styleClass="background" stylesheets="@Stylesheet.css" />
+      <TextArea fx:id="moveString" layoutX="82.0" layoutY="759.0" prefHeight="27.0" prefWidth="1031.0" styleClass="background" stylesheets="@Stylesheet.css" />
       <TableView fx:id="finishStack3" editable="true" layoutX="883.0" layoutY="23.0" prefHeight="253.0" prefWidth="180.0" styleClass="background">
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -69,7 +70,7 @@
             <TableColumn fx:id="turnedStockNumber" prefWidth="99.0" text="Value" />
          </columns>
       </TableView>
-      <TableView fx:id="gameStack1" editable="true" layoutX="21.0" layoutY="315.0" prefHeight="433.0" prefWidth="175.0" styleClass="background">
+      <TableView fx:id="gameStack1" editable="true" layoutX="22.0" layoutY="296.0" prefHeight="433.0" prefWidth="175.0" styleClass="background">
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
@@ -78,7 +79,7 @@
             <TableColumn fx:id="gameStack1Number" prefWidth="99.0" text="Value" />
          </columns>
       </TableView>
-      <TableView fx:id="gameStack2" editable="true" layoutX="205.0" layoutY="315.0" prefHeight="433.0" prefWidth="175.0" styleClass="background">
+      <TableView fx:id="gameStack2" editable="true" layoutX="199.0" layoutY="296.0" prefHeight="433.0" prefWidth="175.0" styleClass="background">
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
@@ -87,7 +88,7 @@
             <TableColumn fx:id="gameStack2Number" prefWidth="99.0" text="Value" />
          </columns>
       </TableView>
-      <TableView fx:id="gameStack3" editable="true" layoutX="388.0" layoutY="315.0" prefHeight="433.0" prefWidth="175.0" styleClass="background">
+      <TableView fx:id="gameStack3" editable="true" layoutX="386.0" layoutY="296.0" prefHeight="433.0" prefWidth="175.0" styleClass="background">
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
@@ -96,7 +97,7 @@
             <TableColumn fx:id="gameStack3Number" prefWidth="99.0" text="Value" />
          </columns>
       </TableView>
-      <TableView fx:id="gameStack4" editable="true" layoutX="570.0" layoutY="315.0" prefHeight="433.0" prefWidth="175.0" styleClass="background">
+      <TableView fx:id="gameStack4" editable="true" layoutX="573.0" layoutY="296.0" prefHeight="433.0" prefWidth="175.0" styleClass="background">
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
@@ -105,7 +106,7 @@
             <TableColumn fx:id="gameStack4Number" prefWidth="99.0" text="Value" />
          </columns>
       </TableView>
-      <TableView fx:id="gameStack5" editable="true" layoutX="757.0" layoutY="315.0" prefHeight="433.0" prefWidth="175.0" styleClass="background">
+      <TableView fx:id="gameStack5" editable="true" layoutX="758.0" layoutY="296.0" prefHeight="433.0" prefWidth="175.0" styleClass="background">
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
@@ -114,7 +115,7 @@
             <TableColumn fx:id="gameStack5Number" prefWidth="99.0" text="Value" />
          </columns>
       </TableView>
-      <TableView fx:id="gameStack6" editable="true" layoutX="942.0" layoutY="315.0" prefHeight="433.0" prefWidth="175.0" styleClass="background">
+      <TableView fx:id="gameStack6" editable="true" layoutX="938.0" layoutY="296.0" prefHeight="433.0" prefWidth="175.0" styleClass="background">
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
@@ -123,7 +124,7 @@
             <TableColumn fx:id="gameStack6Number" prefWidth="99.0" text="Value" />
          </columns>
       </TableView>
-      <TableView fx:id="gameStack7" editable="true" layoutX="1123.0" layoutY="315.0" prefHeight="433.0" prefWidth="175.0" styleClass="background">
+      <TableView fx:id="gameStack7" editable="true" layoutX="1123.0" layoutY="296.0" prefHeight="433.0" prefWidth="175.0" styleClass="background">
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
@@ -132,5 +133,18 @@
             <TableColumn fx:id="gameStack7Number" prefWidth="99.0" text="Value" />
          </columns>
       </TableView>
+      <Button layoutX="1130.0" layoutY="759.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="89.0" text="Add card" />
+      <Text layoutX="76.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="TurnedStock" />
+      <Text layoutX="539.0" layoutY="18.0" strokeType="OUTSIDE" strokeWidth="0.0" text="FinishStack (1)" />
+      <Text layoutX="735.0" layoutY="18.0" strokeType="OUTSIDE" strokeWidth="0.0" text="FinishStack (2)" />
+      <Text layoutX="935.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="FinishStack (3)" />
+      <Text layoutX="1137.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="FinishStack (4)" />
+      <Text layoutX="1172.0" layoutY="748.0" strokeType="OUTSIDE" strokeWidth="0.0" text="GameStack (7)" />
+      <Text layoutX="987.0" layoutY="748.0" strokeType="OUTSIDE" strokeWidth="0.0" text="GameStack (6)" />
+      <Text layoutX="807.0" layoutY="748.0" strokeType="OUTSIDE" strokeWidth="0.0" text="GameStack (5)" />
+      <Text layoutX="71.0" layoutY="748.0" strokeType="OUTSIDE" strokeWidth="0.0" text="GameStack (1)" />
+      <Text layoutX="249.0" layoutY="748.0" strokeType="OUTSIDE" strokeWidth="0.0" text="GameStack (2)" />
+      <Text layoutX="435.0" layoutY="748.0" strokeType="OUTSIDE" strokeWidth="0.0" text="GameStack (3)" />
+      <Text layoutX="622.0" layoutY="748.0" strokeType="OUTSIDE" strokeWidth="0.0" text="GameStack (4)" />
    </children>
 </AnchorPane>

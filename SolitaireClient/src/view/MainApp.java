@@ -3,6 +3,9 @@ package view;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -60,10 +63,28 @@ public class MainApp extends Application {
             Scene scene = new Scene(page);
             dialogStage.setScene(scene);
 
+            dialogStage.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+                @Override
+                public void handle(KeyEvent evt) {
+                    if (evt.getCode().equals(KeyCode.ESCAPE)) {
+                        dialogStage.close();
+                    }
+                }
+            });
+
             CardEditController controller = loader.getController();
+
+            dialogStage.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+                @Override
+                public void handle(KeyEvent evt) {
+                    if (evt.getCode().equals(KeyCode.ENTER)) {
+                        controller.handleOK();
+                    }
+                }
+            });
+
             controller.setStage(dialogStage);
             controller.setCard(card);
-
 
             dialogStage.showAndWait();
         } catch (IOException e) {
