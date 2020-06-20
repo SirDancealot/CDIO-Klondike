@@ -1,15 +1,12 @@
 package model.dto;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 
 public class Card {
-    private static final String[] numberNames = {"Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King"};
+    private static final String[] numberNames = {"Hidden","Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King"};
 
     public enum Suit {
-        HEARTS, SPADES, DIAMONDS, CLUBS
+        HIDDEN, HEARTS, SPADES, DIAMONDS, CLUBS
     }
 
     public enum Color {
@@ -19,6 +16,7 @@ public class Card {
     private Color color;
     private ObjectProperty<Suit> suit = null;
     private IntegerProperty cardValue = null;
+    private StringProperty stringValue = null;
     private boolean hidden = true;
     private boolean isKnown = false;
 
@@ -26,18 +24,24 @@ public class Card {
         this.hidden = false;
         this.suit = new SimpleObjectProperty<>(suit);
         this.cardValue = new SimpleIntegerProperty(cardValue);
-        if(suit == Suit.SPADES || suit == Suit.CLUBS){
+        this.stringValue = new SimpleStringProperty(numberNames[cardValue]);
+        if(suit == Suit.HIDDEN){
+            hidden = true;
+        } else if(suit == Suit.SPADES || suit == Suit.CLUBS){
             this.color = Color.BLACK;
         }else this.color = Color.RED;
     }
 
-    public Card() {}
-
     public void setSuit(Suit suit) {
         this.suit.setValue(suit);
-        if(suit == Suit.SPADES || suit == Suit.CLUBS){
+        if(suit == Suit.HIDDEN){
+            hidden = true;
+            if(cardValue.get() != 0) {
+                setCardValue(0);
+            }
+        } else if(suit == Suit.SPADES || suit == Suit.CLUBS){
             this.color = Color.BLACK;
-        }else this.color = Color.RED;
+        } else this.color = Color.RED;
     }
 
     public IntegerProperty getCardValue() {
@@ -45,6 +49,13 @@ public class Card {
     }
     public void setCardValue(int cardValue) {
         this.cardValue.set(cardValue);
+        this.stringValue.set(numberNames[cardValue]);
+        if(cardValue == 0) {
+            hidden = true;
+            if(suit.getValue() != Suit.HIDDEN) {
+                setSuit(Suit.HIDDEN);
+            }
+        }
     }
 
     public void setKnown(boolean known) {
@@ -59,6 +70,10 @@ public class Card {
     }
     public Color getColor(){
         return color;
+    }
+
+    public StringProperty getStringValue() {
+        return stringValue;
     }
 
     public boolean isBlack() {
@@ -85,6 +100,6 @@ public class Card {
     public String toString() {
         if (hidden)
             return "Hidden";
-        return numberNames[cardValue.getValue()-1] + " of " + suit.getValue().toString();
+        return numberNames[cardValue.getValue()] + " of " + suit.getValue().toString();
     }
 }

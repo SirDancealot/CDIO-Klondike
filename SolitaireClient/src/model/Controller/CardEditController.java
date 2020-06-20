@@ -11,8 +11,6 @@ public class CardEditController {
     private TextField cardValue;
     @FXML
     private TextField suit;
-    @FXML
-    private TextField color;
 
     private Stage editStage;
     private Card card;
@@ -28,33 +26,54 @@ public class CardEditController {
 
     @FXML
     private void handleOK() {
-        card.setSuit(Card.Suit.valueOf(suit.getText()));
-        card.setCardValue(Integer.parseInt(cardValue.getText()));
-        card.setColor(Card.Color.valueOf(color.getText()));
+        Card.Suit lastSuit = card.getSuit().getValue();
+        int lastValue = card.getCardValue().get();
+        boolean changeSuit = !lastSuit.toString().equals(suit.getText().toUpperCase());
+        boolean changeValue = lastValue != Integer.parseInt(cardValue.getText());
 
-        editStage.close();
+        if(validinput(changeSuit,changeValue)) {
+            if(changeSuit) {
+                card.setSuit(Card.Suit.valueOf(suit.getText().toUpperCase()));
+            }
+            if(changeValue) {
+                card.setCardValue(Integer.parseInt(cardValue.getText()));
+            }
+
+            editStage.close();
+        }
     }
 
 
     public void setCard(Card card) {
         this.card = card;
-
-        suit.setText(card.getSuit().getValue().toString());
-        color.setText(card.getColor().toString());
-        cardValue.setText(card.getCardValue().getValue().toString());
+            suit.setText(card.getSuit().getValue().toString());
+            cardValue.setText(card.getCardValue().getValue().toString());
     }
 
-    public boolean validinput() {
-        String message = null;
+    public boolean validinput(boolean changeSuit, boolean changeValue) {
+        String message = "";
 
-        try{
-            Card.Suit.valueOf(suit.getText());
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-            message = "Choose a valid Suit";
+        boolean validSuit = false;
+        for (Card.Suit s : Card.Suit.values()) {
+            if(s.toString().equals(suit.getText().toUpperCase())) {
+                validSuit = true;
+            }
         }
 
-        if(message == null) {
+        if(!validSuit) {
+            message ="Choose a valid Suit";
+        }
+
+        int s = Integer.parseInt(cardValue.getText());
+        if(s < 0 || s > 13) {
+            message = "Choose a valid cardValue between 0 and 13";
+        }
+
+        if((changeSuit ^ changeValue) && (card.getCardValue().get() == 0 || card.getSuit().getValue() == Card.Suit.HIDDEN)) {
+            message = "When changing a hidden card, please change both values";
+        }
+
+        if(message.isEmpty()) {
             return true;
         } else {
             // Show the error message.

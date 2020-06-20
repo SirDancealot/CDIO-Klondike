@@ -37,51 +37,51 @@ public class ViewController {
     @FXML
     private TableColumn<Card, Card.Suit> turnedStockSuit;
     @FXML
-    private TableColumn<Card, Integer> turnedStockNumber;
+    private TableColumn<Card, String> turnedStockNumber;
     @FXML
     private TableColumn<Card, Card.Suit> finishStack4Suit;
     @FXML
-    private TableColumn<Card, Integer> finishStack4Number;
+    private TableColumn<Card, String> finishStack4Number;
     @FXML
     private TableColumn<Card, Card.Suit> finishStack3Suit;
     @FXML
-    private TableColumn<Card, Integer> finishStack3Number;
+    private TableColumn<Card, String> finishStack3Number;
     @FXML
     private TableColumn<Card, Card.Suit> finishStack2Suit;
     @FXML
-    private TableColumn<Card, Integer> finishStack2Number;
+    private TableColumn<Card, String> finishStack2Number;
     @FXML
     private TableColumn<Card, Card.Suit> finishStack1Suit;
     @FXML
-    private TableColumn<Card, Integer> finishStack1Number;
+    private TableColumn<Card, String> finishStack1Number;
     @FXML
     private TableColumn<Card, Card.Suit> gameStack1Suit;
     @FXML
-    private TableColumn<Card, Integer> gameStack1Number;
+    private TableColumn<Card, String> gameStack1Number;
     @FXML
     private TableColumn<Card, Card.Suit> gameStack2Suit;
     @FXML
-    private TableColumn<Card, Integer> gameStack2Number;
+    private TableColumn<Card, String> gameStack2Number;
     @FXML
     private TableColumn<Card, Card.Suit> gameStack3Suit;
     @FXML
-    private TableColumn<Card, Integer> gameStack3Number;
+    private TableColumn<Card, String> gameStack3Number;
     @FXML
     private TableColumn<Card, Card.Suit> gameStack4Suit;
     @FXML
-    private TableColumn<Card, Integer> gameStack4Number;
+    private TableColumn<Card, String> gameStack4Number;
     @FXML
     private TableColumn<Card, Card.Suit> gameStack5Suit;
     @FXML
-    private TableColumn<Card, Integer> gameStack5Number;
+    private TableColumn<Card, String> gameStack5Number;
     @FXML
     private TableColumn<Card, Card.Suit> gameStack6Suit;
     @FXML
-    private TableColumn<Card, Integer> gameStack6Number;
+    private TableColumn<Card, String> gameStack6Number;
     @FXML
     private TableColumn<Card, Card.Suit> gameStack7Suit;
     @FXML
-    private TableColumn<Card, Integer> gameStack7Number;
+    private TableColumn<Card, String> gameStack7Number;
     @FXML
     private TextArea moveString;
 
@@ -91,40 +91,40 @@ public class ViewController {
     private void initialize() {
 
         finishStack4Suit.setCellValueFactory(cellData -> cellData.getValue().getSuit());
-        finishStack4Number.setCellValueFactory(cellData -> cellData.getValue().getCardValue().asObject());
+        finishStack4Number.setCellValueFactory(cellData -> cellData.getValue().getStringValue());
 
         finishStack3Suit.setCellValueFactory(cellData -> cellData.getValue().getSuit());
-        finishStack3Number.setCellValueFactory(cellData -> cellData.getValue().getCardValue().asObject());
+        finishStack3Number.setCellValueFactory(cellData -> cellData.getValue().getStringValue());
 
         finishStack2Suit.setCellValueFactory(cellData -> cellData.getValue().getSuit());
-        finishStack2Number.setCellValueFactory(cellData -> cellData.getValue().getCardValue().asObject());
+        finishStack2Number.setCellValueFactory(cellData -> cellData.getValue().getStringValue());
 
         finishStack1Suit.setCellValueFactory(cellData -> cellData.getValue().getSuit());
-        finishStack1Number.setCellValueFactory(cellData -> cellData.getValue().getCardValue().asObject());
+        finishStack1Number.setCellValueFactory(cellData -> cellData.getValue().getStringValue());
 
         gameStack1Suit.setCellValueFactory(cellData -> cellData.getValue().getSuit());
-        gameStack1Number.setCellValueFactory(cellData -> cellData.getValue().getCardValue().asObject());
+        gameStack1Number.setCellValueFactory(cellData -> cellData.getValue().getStringValue());
 
         gameStack2Suit.setCellValueFactory(cellData -> cellData.getValue().getSuit());
-        gameStack2Number.setCellValueFactory(cellData -> cellData.getValue().getCardValue().asObject());
+        gameStack2Number.setCellValueFactory(cellData -> cellData.getValue().getStringValue());
 
         gameStack3Suit.setCellValueFactory(cellData -> cellData.getValue().getSuit());
-        gameStack3Number.setCellValueFactory(cellData -> cellData.getValue().getCardValue().asObject());
+        gameStack3Number.setCellValueFactory(cellData -> cellData.getValue().getStringValue());
 
         gameStack4Suit.setCellValueFactory(cellData -> cellData.getValue().getSuit());
-        gameStack4Number.setCellValueFactory(cellData -> cellData.getValue().getCardValue().asObject());
+        gameStack4Number.setCellValueFactory(cellData -> cellData.getValue().getStringValue());
 
         gameStack5Suit.setCellValueFactory(cellData -> cellData.getValue().getSuit());
-        gameStack5Number.setCellValueFactory(cellData -> cellData.getValue().getCardValue().asObject());
+        gameStack5Number.setCellValueFactory(cellData -> cellData.getValue().getStringValue());
 
         gameStack6Suit.setCellValueFactory(cellData -> cellData.getValue().getSuit());
-        gameStack6Number.setCellValueFactory(cellData -> cellData.getValue().getCardValue().asObject());
+        gameStack6Number.setCellValueFactory(cellData -> cellData.getValue().getStringValue());
 
         gameStack7Suit.setCellValueFactory(cellData -> cellData.getValue().getSuit());
-        gameStack7Number.setCellValueFactory(cellData -> cellData.getValue().getCardValue().asObject());
+        gameStack7Number.setCellValueFactory(cellData -> cellData.getValue().getStringValue());
 
         turnedStockSuit.setCellValueFactory(cellData -> cellData.getValue().getSuit());
-        turnedStockNumber.setCellValueFactory(cellData -> cellData.getValue().getCardValue().asObject());
+        turnedStockNumber.setCellValueFactory(cellData -> cellData.getValue().getStringValue());
 
         finishStack1.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {

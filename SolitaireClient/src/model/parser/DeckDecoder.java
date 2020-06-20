@@ -26,7 +26,7 @@ public class DeckDecoder {
 				state.getFinishStacks()[i].addCard(card);
 			}
 			if (chars[index++] != 0xFF)
-				state.getStock().addCard(new Card());
+				state.getStock().addCard(new Card(Card.Suit.HIDDEN,0));
 			if (chars[index++] != 0xFF) {
 				int suit = ((int) chars[index] & 0xF);
 				int value = ((int) chars[index] & 0xF0) >> 4;
