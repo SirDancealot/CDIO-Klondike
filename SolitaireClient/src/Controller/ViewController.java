@@ -164,14 +164,14 @@ public class ViewController {
     @FXML
     private void nextMoveButton() {
         nextMove.set(true);
-        LogicController logicController = LogicController.getInstance();
-        String move = logicController.makeMoveTest();
-        if(move != null) {
-            moveString.setText(move);
-        } else {
-            moveString.setText("You lost!");
-        }
-        updateView(logicController.getGameState());
+    }
+
+    public boolean requestNextMove() {
+        return nextMove.get();
+    }
+
+    public void setNextMove(boolean move) {
+        nextMove.set(move);
     }
 
     public void setText(String text) {

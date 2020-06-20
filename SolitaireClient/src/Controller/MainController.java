@@ -1,5 +1,9 @@
 package Controller;
 
+import model.dto.Card;
+import model.dto.GameStack;
+import model.dto.GameState;
+
 import java.io.IOException;
 
 public class MainController {
@@ -24,11 +28,42 @@ public class MainController {
 	public void run() throws IOException {
 		while (view == null) {}
 
-		logic.setGameState(comm.requestNewState());
+		//logic.setGameState(comm.requestNewState());
+		logic.setupGame(comm.requestNewState());
 		view.updateView(logic.getGameState());
+		boolean requestImage = false;
+		String returnString = null;
 
 		while (true) {
-			//view.updateView(logic.getGameState());
+			if (view.requestNextMove()) {
+				if (requestImage) {
+					requestImage = false;
+					updateGameState(returnString, comm.requestNewState());
+				}
+				view.setNextMove(false);
+				returnString = logic.makeMoveTest();
+				if (returnString.contains("hidden"))
+					requestImage = true;
+				view.setText(returnString.isEmpty() ? "You lost" : returnString);
+				view.updateView(logic.getGameState());
+			}
+		}
+	}
+
+	private void updateGameState(String returnString, GameState imgState) {
+		if (returnString.equals("Turn new hidden card from the stock")) {
+			logic.getGameState().getTurnedStock().getTopCard().setSuit(imgState.getTurnedStock().getTopCard().getSuit().getValue());
+			logic.getGameState().getTurnedStock().getTopCard().setCardValue(imgState.getTurnedStock().getTopCard().getCardValue().get());
+
+		} else {
+			int i = Integer.parseInt(returnString.split(" ")[5]) - 1;
+			int expected[] = new int[7], sizes[] = new int[7];
+			for (int j = 0; j < 7; j++) {
+				expected[i] = logic.getGameState().getGameStacks()[i].getMovable();
+				sizes[i] = imgState.getGameStacks()[i].getMovable();
+			}
+
+
 		}
 	}
 

@@ -21,7 +21,8 @@ public class DeckDecoder {
 			int suit = ((int) bytes[index] & 0xF);
 			int value = ((int) bytes[index] & 0xF0) >> 4;
 			Card card = new Card(Card.Suit.values()[suit], value);
-			state.getFinishStacks()[i].addCard(card);
+			if (card.getSuit().getValue() != Card.Suit.HIDDEN)
+				state.getFinishStacks()[i].addCard(card);
 		}
 		if (bytes[index] != 0) {
 			int suit = ((int) bytes[index] & 0xF);
