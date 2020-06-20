@@ -230,7 +230,6 @@ public class ViewController {
 
     public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
-
     }
 
     @FXML
