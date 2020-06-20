@@ -46,7 +46,7 @@ public class ViewController {
             gameStack4Number, gameStack5Number, gameStack6Number, gameStack7Number;
 
     @FXML
-    private TextArea moveString;
+    private TextField moveString;
 
     private TableView<Card>[] stacks;
     private TableColumn[] stackSuits;
@@ -59,19 +59,27 @@ public class ViewController {
         stacks = new TableView[] {gameStack1, gameStack2, gameStack3, gameStack4, gameStack5, gameStack6, gameStack7, finishStack1, finishStack2, finishStack3, finishStack4, turnedStock};
         stackSuits = new TableColumn[]{gameStack1Suit, gameStack2Suit, gameStack3Suit, gameStack4Suit, gameStack5Suit, gameStack6Suit, gameStack7Suit, finishStack1Suit, finishStack2Suit, finishStack3Suit, finishStack4Suit, turnedStockSuit};
         stackNumbers = new TableColumn[] {gameStack1Number, gameStack2Number, gameStack3Number, gameStack4Number, gameStack5Number, gameStack6Number, gameStack7Number, finishStack1Number, finishStack2Number, finishStack3Number, finishStack4Number, turnedStockNumber};
-
-        for (TableColumn<Card, Card.Suit> t : stackSuits) {
-            t.setCellValueFactory(cellData -> cellData.getValue().getSuit());
-        }
+        moveString.setEditable(false);
 
         for (TableColumn<Card, String> t : stackNumbers) {
             t.setCellValueFactory(cellData -> cellData.getValue().getStringValue());
+            t.setSortable(false);
+        }
+
+        for (TableColumn<Card, Card.Suit> t : stackSuits) {
+            t.setCellValueFactory(cellData -> cellData.getValue().getSuit());
+            t.setSortable(false);
         }
 
         for (TableView<Card> t : stacks) {
             t.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
                 if (newSelection != null) {
                     clearSelections(t);
+                }
+            });
+            t.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2) {
+                    editButton();
                 }
             });
         }

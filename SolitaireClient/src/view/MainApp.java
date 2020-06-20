@@ -50,6 +50,48 @@ public class MainApp extends Application {
         }
     }
 
+    public void dialogBoxForAdd(Card card) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainApp.class.getResource("AddCard.fxml"));
+            AnchorPane page = loader.load();
+
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Add Card");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(primaryStage);
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+
+            dialogStage.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+                @Override
+                public void handle(KeyEvent evt) {
+                    if (evt.getCode().equals(KeyCode.ESCAPE)) {
+                        dialogStage.close();
+                    }
+                }
+            });
+
+            AddCardController controller = loader.getController();
+
+            dialogStage.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+                @Override
+                public void handle(KeyEvent evt) {
+                    if (evt.getCode().equals(KeyCode.ENTER)) {
+                        controller.handleSave();
+                    }
+                }
+            });
+
+            controller.setStage(dialogStage);
+            controller.setCard(card);
+
+            dialogStage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void dialogBoxForEdit(Card card) {
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -90,16 +132,6 @@ public class MainApp extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-
-
-    public boolean isPushed() {
-        return isPushed;
-    }
-
-    public void setPushed(boolean pushed) {
-        isPushed = pushed;
     }
 
     public static void main(String[] args) throws IOException {

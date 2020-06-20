@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import model.dto.Card;
 
 public class AddCardController {
     @FXML
@@ -16,6 +17,7 @@ public class AddCardController {
     private ChoiceBox table;
 
     private Stage editStage;
+    private Card card;
 
     @FXML
     private void initialize() {
@@ -26,8 +28,16 @@ public class AddCardController {
         this.editStage = editStage;
     }
 
-    //@FXML
-    //private void
+    public void setCard(Card card) {
+        this.card = card;
+        suit.setText(card.getSuit().getValue().toString());
+        cardValue.setText(card.getCardValue().getValue().toString());
+    }
+
+    @FXML
+    public void handleSave() {
+        editStage.close();
+    }
 
     @FXML
     private void cancel() {
