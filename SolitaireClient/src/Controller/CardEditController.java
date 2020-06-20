@@ -16,37 +16,16 @@ public class CardEditController {
     private Card card;
 
     @FXML
-    private void initialize() {
-
-    }
+    private void initialize() {}
 
     public void setStage(Stage editStage) {
         this.editStage = editStage;
     }
 
-    @FXML
-    private void handleOK() {
-        Card.Suit lastSuit = card.getSuit().getValue();
-        int lastValue = card.getCardValue().get();
-        boolean changeSuit = !lastSuit.toString().equals(suit.getText().toUpperCase());
-        boolean changeValue = lastValue != Integer.parseInt(cardValue.getText());
-
-        if(validinput(changeSuit,changeValue)) {
-            if(changeSuit) {
-                card.setSuit(Card.Suit.valueOf(suit.getText().toUpperCase()));
-            }
-            if(changeValue) {
-                card.setCardValue(Integer.parseInt(cardValue.getText()));
-            }
-            editStage.close();
-        }
-    }
-
-
     public void setCard(Card card) {
         this.card = card;
-            suit.setText(card.getSuit().getValue().toString());
-            cardValue.setText(card.getCardValue().getValue().toString());
+        suit.setText(card.getSuit().getValue().toString());
+        cardValue.setText(card.getCardValue().getValue().toString());
     }
 
     public boolean validinput(boolean changeSuit, boolean changeValue) {
@@ -85,6 +64,24 @@ public class CardEditController {
             alert.showAndWait();
 
             return false;
+        }
+    }
+
+    @FXML
+    public void handleOK() {
+        Card.Suit lastSuit = card.getSuit().getValue();
+        int lastValue = card.getCardValue().get();
+        boolean changeSuit = !lastSuit.toString().equals(suit.getText().toUpperCase());
+        boolean changeValue = lastValue != Integer.parseInt(cardValue.getText());
+
+        if(validinput(changeSuit,changeValue)) {
+            if(changeSuit) {
+                card.setSuit(Card.Suit.valueOf(suit.getText().toUpperCase()));
+            }
+            if(changeValue) {
+                card.setCardValue(Integer.parseInt(cardValue.getText()));
+            }
+            editStage.close();
         }
     }
 

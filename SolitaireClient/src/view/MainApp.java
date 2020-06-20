@@ -3,7 +3,9 @@ package view;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.TableView;
+import javafx.event.EventHandler;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -34,14 +36,57 @@ public class MainApp extends Application {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("ListOfCards.fxml"));
             rootLayout = loader.load();
-            ViewController viewController = loader.getController();
-            MainController.getINSTANCE().setViewController(viewController);
+
             Scene scene = new Scene(rootLayout);
             primaryStage.setScene(scene);
             primaryStage.show();
 
+            ViewController viewController = loader.getController();
+            MainController.getINSTANCE().setViewController(viewController);
 
             viewController.setMainApp(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void dialogBoxForAdd(Card card) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainApp.class.getResource("AddCard.fxml"));
+            AnchorPane page = loader.load();
+
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Add Card");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(primaryStage);
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+
+            dialogStage.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+                @Override
+                public void handle(KeyEvent evt) {
+                    if (evt.getCode().equals(KeyCode.ESCAPE)) {
+                        dialogStage.close();
+                    }
+                }
+            });
+
+            AddCardController controller = loader.getController();
+
+            dialogStage.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+                @Override
+                public void handle(KeyEvent evt) {
+                    if (evt.getCode().equals(KeyCode.ENTER)) {
+                        controller.handleSave();
+                    }
+                }
+            });
+
+            controller.setStage(dialogStage);
+            controller.setCard(card);
+
+            dialogStage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -60,25 +105,33 @@ public class MainApp extends Application {
             Scene scene = new Scene(page);
             dialogStage.setScene(scene);
 
+            dialogStage.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+                @Override
+                public void handle(KeyEvent evt) {
+                    if (evt.getCode().equals(KeyCode.ESCAPE)) {
+                        dialogStage.close();
+                    }
+                }
+            });
+
             CardEditController controller = loader.getController();
+
+            dialogStage.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+                @Override
+                public void handle(KeyEvent evt) {
+                    if (evt.getCode().equals(KeyCode.ENTER)) {
+                        controller.handleOK();
+                    }
+                }
+            });
+
             controller.setStage(dialogStage);
             controller.setCard(card);
-
 
             dialogStage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-
-
-    public boolean isPushed() {
-        return isPushed;
-    }
-
-    public void setPushed(boolean pushed) {
-        isPushed = pushed;
     }
 
     public static void main(String[] args) throws IOException {

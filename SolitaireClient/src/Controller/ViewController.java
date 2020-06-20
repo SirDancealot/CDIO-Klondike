@@ -34,82 +34,23 @@ public class ViewController {
     }
 
     @FXML
-    private TableView<Card> finishStack4;
+    private TableView<Card> finishStack4, finishStack3, finishStack2, finishStack1, turnedStock, gameStack1,
+            gameStack2, gameStack3, gameStack4, gameStack5, gameStack6, gameStack7;
     @FXML
-    private TableView<Card> finishStack3;
+    private TableColumn<Card, Card.Suit> turnedStockSuit, finishStack4Suit, finishStack3Suit, finishStack2Suit,
+            finishStack1Suit, gameStack1Suit, gameStack2Suit, gameStack3Suit, gameStack4Suit, gameStack5Suit,
+            gameStack6Suit, gameStack7Suit;
     @FXML
-    private TableView<Card> finishStack2;
+    private TableColumn<Card, String> turnedStockNumber, finishStack4Number, finishStack3Number,
+            finishStack2Number, finishStack1Number, gameStack1Number, gameStack2Number, gameStack3Number,
+            gameStack4Number, gameStack5Number, gameStack6Number, gameStack7Number;
+
     @FXML
-    private TableView<Card> finishStack1;
-    @FXML
-    private TableView<Card> turnedStock;
-    @FXML
-    private TableView<Card> gameStack1;
-    @FXML
-    private TableView<Card> gameStack2;
-    @FXML
-    private TableView<Card> gameStack3;
-    @FXML
-    private TableView<Card> gameStack4;
-    @FXML
-    private TableView<Card> gameStack5;
-    @FXML
-    private TableView<Card> gameStack6;
-    @FXML
-    private TableView<Card> gameStack7;
+    private TextField moveString;
+
     private TableView<Card>[] stacks;
-    @FXML
-    private TableColumn<Card, Card.Suit> turnedStockSuit;
-    @FXML
-    private TableColumn<Card, String> turnedStockNumber;
-    @FXML
-    private TableColumn<Card, Card.Suit> finishStack4Suit;
-    @FXML
-    private TableColumn<Card, String> finishStack4Number;
-    @FXML
-    private TableColumn<Card, Card.Suit> finishStack3Suit;
-    @FXML
-    private TableColumn<Card, String> finishStack3Number;
-    @FXML
-    private TableColumn<Card, Card.Suit> finishStack2Suit;
-    @FXML
-    private TableColumn<Card, String> finishStack2Number;
-    @FXML
-    private TableColumn<Card, Card.Suit> finishStack1Suit;
-    @FXML
-    private TableColumn<Card, String> finishStack1Number;
-    @FXML
-    private TableColumn<Card, Card.Suit> gameStack1Suit;
-    @FXML
-    private TableColumn<Card, String> gameStack1Number;
-    @FXML
-    private TableColumn<Card, Card.Suit> gameStack2Suit;
-    @FXML
-    private TableColumn<Card, String> gameStack2Number;
-    @FXML
-    private TableColumn<Card, Card.Suit> gameStack3Suit;
-    @FXML
-    private TableColumn<Card, String> gameStack3Number;
-    @FXML
-    private TableColumn<Card, Card.Suit> gameStack4Suit;
-    @FXML
-    private TableColumn<Card, String> gameStack4Number;
-    @FXML
-    private TableColumn<Card, Card.Suit> gameStack5Suit;
-    @FXML
-    private TableColumn<Card, String> gameStack5Number;
-    @FXML
-    private TableColumn<Card, Card.Suit> gameStack6Suit;
-    @FXML
-    private TableColumn<Card, String> gameStack6Number;
-    @FXML
-    private TableColumn<Card, Card.Suit> gameStack7Suit;
-    @FXML
-    private TableColumn<Card, String> gameStack7Number;
     private TableColumn[] stackSuits;
     private TableColumn[] stackNumbers;
-    @FXML
-    private TextArea moveString;
 
     private MainApp mainApp;
 
@@ -118,19 +59,27 @@ public class ViewController {
         stacks = new TableView[] {gameStack1, gameStack2, gameStack3, gameStack4, gameStack5, gameStack6, gameStack7, finishStack1, finishStack2, finishStack3, finishStack4, turnedStock};
         stackSuits = new TableColumn[]{gameStack1Suit, gameStack2Suit, gameStack3Suit, gameStack4Suit, gameStack5Suit, gameStack6Suit, gameStack7Suit, finishStack1Suit, finishStack2Suit, finishStack3Suit, finishStack4Suit, turnedStockSuit};
         stackNumbers = new TableColumn[] {gameStack1Number, gameStack2Number, gameStack3Number, gameStack4Number, gameStack5Number, gameStack6Number, gameStack7Number, finishStack1Number, finishStack2Number, finishStack3Number, finishStack4Number, turnedStockNumber};
-
-        for (TableColumn<Card, Card.Suit> t : stackSuits) {
-            t.setCellValueFactory(cellData -> cellData.getValue().getSuit());
-        }
+        moveString.setEditable(false);
 
         for (TableColumn<Card, String> t : stackNumbers) {
             t.setCellValueFactory(cellData -> cellData.getValue().getStringValue());
+            t.setSortable(false);
+        }
+
+        for (TableColumn<Card, Card.Suit> t : stackSuits) {
+            t.setCellValueFactory(cellData -> cellData.getValue().getSuit());
+            t.setSortable(false);
         }
 
         for (TableView<Card> t : stacks) {
             t.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
                 if (newSelection != null) {
                     clearSelections(t);
+                }
+            });
+            t.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2) {
+                    editButton();
                 }
             });
         }
@@ -146,6 +95,11 @@ public class ViewController {
 
     public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
+    }
+
+    @FXML
+    private void addCard() {
+
     }
 
     @FXML
