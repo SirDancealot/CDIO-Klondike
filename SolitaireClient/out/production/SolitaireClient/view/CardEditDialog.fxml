@@ -7,7 +7,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="162.0" prefWidth="400.0" styleClass="background" stylesheets="@Stylesheet.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.CardEditController">
+<AnchorPane prefHeight="162.0" prefWidth="400.0" styleClass="background1" stylesheets="@Stylesheet.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.CardEditController">
    <children>
       <GridPane layoutX="6.0" layoutY="24.0" AnchorPane.leftAnchor="6.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="24.0">
         <columnConstraints>
@@ -26,10 +26,7 @@
             </Label>
             <TextField fx:id="cardValue" stylesheets="@Stylesheet.css" GridPane.columnIndex="1" />
             <Label styleClass="label-bright" stylesheets="@Stylesheet.css" text="Card Value" textFill="WHITE">
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-               <padding>
+                <padding>
                   <Insets left="5.0" />
                </padding>
             </Label>

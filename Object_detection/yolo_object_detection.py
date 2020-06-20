@@ -8,7 +8,8 @@ confThreshold = 0.7  # Confidence threshold
 nmsThreshold = 0.4  # Non-maximum suppression threshold
 inpWidth = 608  # Width of network's input image
 inpHeight = 608  # Height of network's input image
-img_name = "./TEST.jpg"
+img_name = "./TEST" \
+           ".jpg"
 capture_from_webcam = False
 
 # Load Yolo

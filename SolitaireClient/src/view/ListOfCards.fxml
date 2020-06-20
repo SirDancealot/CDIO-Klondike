@@ -16,7 +16,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1320.0" stylesheets="@Stylesheet.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.ViewController">
+<AnchorPane prefHeight="800.0" prefWidth="1320.0" styleClass="background1" stylesheets="@Stylesheet.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.ViewController">
    <children>
       <Button layoutX="14.0" layoutY="759.0" mnemonicParsing="false" onAction="#editButton" text="Edit card" AnchorPane.bottomAnchor="10.0">
          <opaqueInsets>
@@ -134,17 +134,17 @@
          </columns>
       </TableView>
       <Button layoutX="1130.0" layoutY="759.0" mnemonicParsing="false" onAction="#addCard" prefHeight="27.0" prefWidth="89.0" text="Add card" AnchorPane.bottomAnchor="10.0" />
-      <Text layoutX="64.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="TurnedStock" />
-      <Text layoutX="615.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="FinishStack (1)" />
-      <Text layoutX="800.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="FinishStack (2)" />
-      <Text layoutX="984.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="FinishStack (3)" />
-      <Text layoutX="1169.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="FinishStack (4)" />
-      <Text layoutX="1169.0" layoutY="747.0" strokeType="OUTSIDE" strokeWidth="0.0" text="GameStack (7)" />
-      <Text layoutX="984.0" layoutY="747.0" strokeType="OUTSIDE" strokeWidth="0.0" text="GameStack (6)" />
-      <Text layoutX="799.0" layoutY="748.0" strokeType="OUTSIDE" strokeWidth="0.0" text="GameStack (5)" />
-      <Text layoutX="59.0" layoutY="747.0" strokeType="OUTSIDE" strokeWidth="0.0" text="GameStack (1)" />
-      <Text layoutX="244.0" layoutY="748.0" strokeType="OUTSIDE" strokeWidth="0.0" text="GameStack (2)" />
-      <Text layoutX="429.0" layoutY="748.0" strokeType="OUTSIDE" strokeWidth="0.0" text="GameStack (3)" />
-      <Text layoutX="614.0" layoutY="747.0" strokeType="OUTSIDE" strokeWidth="0.0" text="GameStack (4)" />
+      <Text layoutX="64.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-above" text="TurnedStock" />
+      <Text layoutX="615.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-above" text="FinishStack (1)" />
+      <Text layoutX="800.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-above" text="FinishStack (2)" />
+      <Text layoutX="984.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-above" text="FinishStack (3)" />
+      <Text layoutX="1169.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-above" text="FinishStack (4)" />
+      <Text layoutX="1169.0" layoutY="747.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-above" text="GameStack (7)" />
+      <Text layoutX="984.0" layoutY="747.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-above" text="GameStack (6)" />
+      <Text layoutX="799.0" layoutY="748.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-above" text="GameStack (5)" />
+      <Text layoutX="59.0" layoutY="747.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-above" text="GameStack (1)" />
+      <Text layoutX="244.0" layoutY="748.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-above" text="GameStack (2)" />
+      <Text layoutX="429.0" layoutY="748.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-above" text="GameStack (3)" />
+      <Text layoutX="614.0" layoutY="747.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-above" text="GameStack (4)" />
    </children>
 </AnchorPane>

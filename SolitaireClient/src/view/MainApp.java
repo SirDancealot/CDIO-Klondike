@@ -20,8 +20,6 @@ import model.dto.Card;
 public class MainApp extends Application {
     private Stage primaryStage;
     private AnchorPane rootLayout;
-    boolean isPushed = false;
-
 
     @Override
     public void start(Stage primaryStage) {

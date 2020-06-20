@@ -3,7 +3,12 @@ package Controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 import model.dto.Card;
 import model.dto.GameState;
 import view.MainApp;
@@ -61,6 +66,7 @@ public class ViewController {
         stackNumbers = new TableColumn[] {gameStack1Number, gameStack2Number, gameStack3Number, gameStack4Number, gameStack5Number, gameStack6Number, gameStack7Number, finishStack1Number, finishStack2Number, finishStack3Number, finishStack4Number, turnedStockNumber};
         moveString.setEditable(false);
 
+
         for (TableColumn<Card, String> t : stackNumbers) {
             t.setCellValueFactory(cellData -> cellData.getValue().getStringValue());
             t.setSortable(false);
@@ -69,6 +75,10 @@ public class ViewController {
         for (TableColumn<Card, Card.Suit> t : stackSuits) {
             t.setCellValueFactory(cellData -> cellData.getValue().getSuit());
             t.setSortable(false);
+        }
+
+        for (TableView<Card> t : stacks) {
+            t.setBackground(new Background(new BackgroundFill(Color.rgb(201, 222, 195), CornerRadii.EMPTY, Insets.EMPTY)));
         }
 
         for (TableView<Card> t : stacks) {
@@ -136,16 +146,19 @@ public class ViewController {
         ObservableList<Card> cards = FXCollections.observableArrayList();
         cards.addAll(gameState.getTurnedStock().stack);
         turnedStock.setItems(cards);
+        turnedStock.setBackground(new Background(new BackgroundFill(Color.rgb(201, 222, 195), CornerRadii.EMPTY, Insets.EMPTY)));
 
         for (int i = 0; i < 7; i++) {
             cards = FXCollections.observableArrayList();
             cards.addAll(gameState.getGameStacks()[i].stack);
             stacks[i].setItems(cards);
+            stacks[i].setBackground(new Background(new BackgroundFill(Color.rgb(201, 222, 195), CornerRadii.EMPTY, Insets.EMPTY)));
         }
         for (int i = 0; i < 4; i++) {
             cards = FXCollections.observableArrayList();
             cards.addAll(gameState.getFinishStacks()[i].stack);
             stacks[i+7].setItems(cards);
+            stacks[i+7].setBackground(new Background(new BackgroundFill(Color.rgb(201, 222, 195), CornerRadii.EMPTY, Insets.EMPTY)));
         }
     }
 }
