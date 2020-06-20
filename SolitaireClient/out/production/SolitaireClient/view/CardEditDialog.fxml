@@ -26,10 +26,7 @@
             </Label>
             <TextField fx:id="cardValue" stylesheets="@Stylesheet.css" GridPane.columnIndex="1" />
             <Label styleClass="label-bright" stylesheets="@Stylesheet.css" text="Card Value" textFill="WHITE">
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-               <padding>
+                <padding>
                   <Insets left="5.0" />
                </padding>
             </Label>
