@@ -1,7 +1,7 @@
 package dto;
 
 public class Card {
-    private static final String[] numberNames = {"Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King"};
+    private static final String[] numberNames = {"Hidden", "Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King"};
 
     public enum Suit {
         Hidden, HEARTS, SPADES, DIAMONDS, CLUBS
@@ -28,9 +28,12 @@ public class Card {
     public Card(Suit suit, int cardValue) {
         this.suit = suit;
         this.cardValue = cardValue;
-        if(suit == Suit.SPADES || suit == Suit.CLUBS){
+        if (suit == Suit.Hidden) {
+            hidden = true;
+        } else if(suit == Suit.SPADES || suit == Suit.CLUBS){
             this.color = Color.BLACK;
-        }else this.color = Color.RED;
+        } else this.color = Color.RED;
+
     }
 
     public Color getColor(){
@@ -52,6 +55,10 @@ public class Card {
         return cardValue;
     }
 
+    public String getStringValue() {
+       return numberNames[cardValue];
+    }
+
     public void setCardValue(int cardValue) {
         this.cardValue = cardValue;
     }
@@ -60,7 +67,7 @@ public class Card {
     public String toString() {
         if (hidden)
             return "Hidden";
-        return numberNames[cardValue-1] + " of " + suit.toString();
+        return numberNames[cardValue] + " of " + suit.toString();
     }
 
     public boolean isHidden() {

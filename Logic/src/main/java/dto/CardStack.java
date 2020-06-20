@@ -57,10 +57,11 @@ public class CardStack {
 
     @Override
     public String toString() {
-        String s = "CardStack{";
+        StringBuilder sb = new StringBuilder();
+        sb.append("CardStack{");
         for (Card c : stack) {
-            s = s.concat(("\nCard = " + c.toString()));
+            sb.append("\nCard = ").append(c.toString());
         }
-        return  s.concat("\n}");
+        return  sb.append("\n}").toString();
     }
 }
