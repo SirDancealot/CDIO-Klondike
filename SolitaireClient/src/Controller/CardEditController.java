@@ -38,7 +38,6 @@ public class CardEditController {
             if(changeValue) {
                 card.setCardValue(Integer.parseInt(cardValue.getText()));
             }
-
             editStage.close();
         }
     }

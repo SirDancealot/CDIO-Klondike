@@ -17,7 +17,6 @@ import model.dto.Card;
 public class MainApp extends Application {
     private Stage primaryStage;
     private AnchorPane rootLayout;
-    private LogicController logicController = LogicController.getInstance();
     boolean isPushed = false;
 
 
@@ -27,21 +26,6 @@ public class MainApp extends Application {
         this.primaryStage.setTitle("SolitaireClient");
 
         initRootLayout();
-    }
-
-    public ObservableList<Card> getCards() {
-        ObservableList<Card> cards = FXCollections.observableArrayList();
-        cards.add(new Card(Card.Suit.SPADES,1));
-        cards.add(new Card(Card.Suit.SPADES,2));
-        cards.add(new Card(Card.Suit.SPADES,3));
-        cards.add(new Card(Card.Suit.SPADES,4));
-
-        cards.add(new Card(Card.Suit.HEARTS,1));
-        cards.add(new Card(Card.Suit.HEARTS,2));
-        cards.add(new Card(Card.Suit.HEARTS,3));
-        cards.add(new Card(Card.Suit.HEARTS,4));
-
-        return cards;
     }
 
     private void initRootLayout() {

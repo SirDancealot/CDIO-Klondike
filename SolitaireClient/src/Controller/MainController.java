@@ -22,15 +22,13 @@ public class MainController {
 	}
 
 	public void run() throws IOException {
-		while (view == null) {
-			System.out.println("test");
-		}
+		while (view == null) {}
 
 		logic.setGameState(comm.requestNewState());
 		view.updateView(logic.getGameState());
 
 		while (true) {
-			view.updateView(logic.getGameState());
+			//view.updateView(logic.getGameState());
 		}
 	}
 
