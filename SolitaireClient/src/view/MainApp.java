@@ -11,14 +11,13 @@ import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
-import model.Controller.*;
+import Controller.*;
 import model.dto.Card;
 
 public class MainApp extends Application {
     private Stage primaryStage;
     private AnchorPane rootLayout;
     private LogicController logicController = LogicController.getInstance();
-    private ViewController viewController = new ViewController();
     boolean isPushed = false;
 
 
@@ -55,10 +54,8 @@ public class MainApp extends Application {
             primaryStage.setScene(scene);
             primaryStage.show();
 
-            viewController = loader.getController();
-
-            logicController.setupGame();
-            viewController.updateView(logicController.getGameState());
+            ViewController viewController = loader.getController();
+            MainController.getINSTANCE().setViewController(viewController);
 
             viewController.setMainApp(this);
         } catch (IOException e) {
@@ -100,7 +97,11 @@ public class MainApp extends Application {
         isPushed = pushed;
     }
 
-    public static void main(String[] args) {
-        launch(args);
+    public static void main(String[] args) throws IOException {
+        Thread t = new Thread(() -> {
+            launch(args);
+        });
+        t.start();
+        MainController.getINSTANCE().run();
     }
 }

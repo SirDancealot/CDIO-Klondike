@@ -6,14 +6,16 @@ public class GameState {
     private GameStack[] gameStacks = new GameStack[7];
     private FinishStack[] finishStacks = new FinishStack[4];
 
-    private static GameState gameState_instance = null;
+    private static GameState primaryGameState = null;
 
-    public static GameState getInstance()
-    {
-        if (gameState_instance == null)
-            gameState_instance = new GameState();
+    public static GameState getPrimary() {
+        if (primaryGameState == null)
+            primaryGameState = new GameState();
+        return primaryGameState;
+    }
 
-        return gameState_instance;
+    public static void setPrimary(GameState state) {
+        primaryGameState = state;
     }
 
     public GameState() {
