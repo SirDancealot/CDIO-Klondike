@@ -3,6 +3,7 @@ package view;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.TableView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -17,7 +18,6 @@ import model.dto.Card;
 public class MainApp extends Application {
     private Stage primaryStage;
     private AnchorPane rootLayout;
-    private LogicController logicController = LogicController.getInstance();
     boolean isPushed = false;
 
 
@@ -29,33 +29,17 @@ public class MainApp extends Application {
         initRootLayout();
     }
 
-    public ObservableList<Card> getCards() {
-        ObservableList<Card> cards = FXCollections.observableArrayList();
-        cards.add(new Card(Card.Suit.SPADES,1));
-        cards.add(new Card(Card.Suit.SPADES,2));
-        cards.add(new Card(Card.Suit.SPADES,3));
-        cards.add(new Card(Card.Suit.SPADES,4));
-
-        cards.add(new Card(Card.Suit.HEARTS,1));
-        cards.add(new Card(Card.Suit.HEARTS,2));
-        cards.add(new Card(Card.Suit.HEARTS,3));
-        cards.add(new Card(Card.Suit.HEARTS,4));
-
-        return cards;
-    }
-
     private void initRootLayout() {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("ListOfCards.fxml"));
             rootLayout = loader.load();
-
+            ViewController viewController = loader.getController();
+            MainController.getINSTANCE().setViewController(viewController);
             Scene scene = new Scene(rootLayout);
             primaryStage.setScene(scene);
             primaryStage.show();
 
-            ViewController viewController = loader.getController();
-            MainController.getINSTANCE().setViewController(viewController);
 
             viewController.setMainApp(this);
         } catch (IOException e) {

@@ -57,6 +57,7 @@ public class ViewController {
     private TableView<Card> gameStack6;
     @FXML
     private TableView<Card> gameStack7;
+    private TableView<Card>[] stacks;
     @FXML
     private TableColumn<Card, Card.Suit> turnedStockSuit;
     @FXML
@@ -105,6 +106,8 @@ public class ViewController {
     private TableColumn<Card, Card.Suit> gameStack7Suit;
     @FXML
     private TableColumn<Card, String> gameStack7Number;
+    private TableColumn[] stackSuits;
+    private TableColumn[] stackNumbers;
     @FXML
     private TextArea moveString;
 
@@ -112,142 +115,32 @@ public class ViewController {
 
     @FXML
     private void initialize() {
+        stacks = new TableView[] {gameStack1, gameStack2, gameStack3, gameStack4, gameStack5, gameStack6, gameStack7, finishStack1, finishStack2, finishStack3, finishStack4, turnedStock};
+        stackSuits = new TableColumn[]{gameStack1Suit, gameStack2Suit, gameStack3Suit, gameStack4Suit, gameStack5Suit, gameStack6Suit, gameStack7Suit, finishStack1Suit, finishStack2Suit, finishStack3Suit, finishStack4Suit, turnedStockSuit};
+        stackNumbers = new TableColumn[] {gameStack1Number, gameStack2Number, gameStack3Number, gameStack4Number, gameStack5Number, gameStack6Number, gameStack7Number, finishStack1Number, finishStack2Number, finishStack3Number, finishStack4Number, turnedStockNumber};
 
-        finishStack4Suit.setCellValueFactory(cellData -> cellData.getValue().getSuit());
-        finishStack4Number.setCellValueFactory(cellData -> cellData.getValue().getStringValue());
+        for (TableColumn<Card, Card.Suit> t : stackSuits) {
+            t.setCellValueFactory(cellData -> cellData.getValue().getSuit());
+        }
 
-        finishStack3Suit.setCellValueFactory(cellData -> cellData.getValue().getSuit());
-        finishStack3Number.setCellValueFactory(cellData -> cellData.getValue().getStringValue());
+        for (TableColumn<Card, String> t : stackNumbers) {
+            t.setCellValueFactory(cellData -> cellData.getValue().getStringValue());
+        }
 
-        finishStack2Suit.setCellValueFactory(cellData -> cellData.getValue().getSuit());
-        finishStack2Number.setCellValueFactory(cellData -> cellData.getValue().getStringValue());
-
-        finishStack1Suit.setCellValueFactory(cellData -> cellData.getValue().getSuit());
-        finishStack1Number.setCellValueFactory(cellData -> cellData.getValue().getStringValue());
-
-        gameStack1Suit.setCellValueFactory(cellData -> cellData.getValue().getSuit());
-        gameStack1Number.setCellValueFactory(cellData -> cellData.getValue().getStringValue());
-
-        gameStack2Suit.setCellValueFactory(cellData -> cellData.getValue().getSuit());
-        gameStack2Number.setCellValueFactory(cellData -> cellData.getValue().getStringValue());
-
-        gameStack3Suit.setCellValueFactory(cellData -> cellData.getValue().getSuit());
-        gameStack3Number.setCellValueFactory(cellData -> cellData.getValue().getStringValue());
-
-        gameStack4Suit.setCellValueFactory(cellData -> cellData.getValue().getSuit());
-        gameStack4Number.setCellValueFactory(cellData -> cellData.getValue().getStringValue());
-
-        gameStack5Suit.setCellValueFactory(cellData -> cellData.getValue().getSuit());
-        gameStack5Number.setCellValueFactory(cellData -> cellData.getValue().getStringValue());
-
-        gameStack6Suit.setCellValueFactory(cellData -> cellData.getValue().getSuit());
-        gameStack6Number.setCellValueFactory(cellData -> cellData.getValue().getStringValue());
-
-        gameStack7Suit.setCellValueFactory(cellData -> cellData.getValue().getSuit());
-        gameStack7Number.setCellValueFactory(cellData -> cellData.getValue().getStringValue());
-
-        turnedStockSuit.setCellValueFactory(cellData -> cellData.getValue().getSuit());
-        turnedStockNumber.setCellValueFactory(cellData -> cellData.getValue().getStringValue());
-
-        finishStack1.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                clearSelections(finishStack1);
-            }
-        });
-        finishStack2.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                clearSelections(finishStack2);
-            }
-        });
-        finishStack3.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                clearSelections(finishStack3);
-            }
-        });
-        finishStack4.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                clearSelections(finishStack4);
-            }
-        });
-        gameStack1.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                clearSelections(gameStack1);
-            }
-        });
-        gameStack2.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                clearSelections(gameStack2);
-            }
-        });
-        gameStack3.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                clearSelections(gameStack3);
-            }
-        });
-        gameStack4.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                clearSelections(gameStack4);
-            }
-        });
-        gameStack5.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                clearSelections(gameStack5);
-            }
-        });
-        gameStack6.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                clearSelections(gameStack6);
-            }
-        });
-        gameStack7.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                clearSelections(gameStack7);
-            }
-        });
-        turnedStock.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                clearSelections(turnedStock);
-            }
-        });
-
+        for (TableView<Card> t : stacks) {
+            t.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+                if (newSelection != null) {
+                    clearSelections(t);
+                }
+            });
+        }
     }
 
     private void clearSelections(TableView<Card> tableView) {
-        if(tableView != finishStack1) {
-            finishStack1.getSelectionModel().clearSelection();
-        }
-        if(tableView != finishStack2) {
-            finishStack2.getSelectionModel().clearSelection();
-        }
-        if(tableView != finishStack3) {
-            finishStack3.getSelectionModel().clearSelection();
-        }
-        if(tableView != finishStack4) {
-            finishStack4.getSelectionModel().clearSelection();
-        }
-        if(tableView != gameStack1) {
-            gameStack1.getSelectionModel().clearSelection();
-        }
-        if(tableView != gameStack2) {
-            gameStack2.getSelectionModel().clearSelection();
-        }
-        if(tableView != gameStack3) {
-            gameStack3.getSelectionModel().clearSelection();
-        }
-        if(tableView != gameStack4) {
-            gameStack4.getSelectionModel().clearSelection();
-        }
-        if(tableView != gameStack5) {
-            gameStack5.getSelectionModel().clearSelection();
-        }
-        if(tableView != gameStack6) {
-            gameStack6.getSelectionModel().clearSelection();
-        }
-        if(tableView != gameStack7) {
-            gameStack7.getSelectionModel().clearSelection();
-        }
-        if(tableView != turnedStock) {
-            turnedStock.getSelectionModel().clearSelection();
+    	for (TableView<Card> t : stacks) {
+            if(tableView != t) {
+                t.getSelectionModel().clearSelection();
+            }
         }
     }
 
@@ -259,40 +152,12 @@ public class ViewController {
     private void editButton() {
         Card specificCard = null;
 
-        specificCard = finishStack4.getSelectionModel().getSelectedItem();
-        if(specificCard == null) {
-            specificCard = finishStack3.getSelectionModel().getSelectedItem();
+        for (TableView<Card> t : stacks) {
+            if(specificCard == null) {
+                specificCard = t.getSelectionModel().getSelectedItem();
+            }
         }
-        if(specificCard == null) {
-            specificCard = finishStack2.getSelectionModel().getSelectedItem();
-        }
-        if(specificCard == null) {
-            specificCard = finishStack1.getSelectionModel().getSelectedItem();
-        }
-        if(specificCard == null) {
-            specificCard = gameStack1.getSelectionModel().getSelectedItem();
-        }
-        if(specificCard == null) {
-            specificCard = gameStack2.getSelectionModel().getSelectedItem();
-        }
-        if(specificCard == null) {
-            specificCard = gameStack3.getSelectionModel().getSelectedItem();
-        }
-        if(specificCard == null) {
-            specificCard = gameStack4.getSelectionModel().getSelectedItem();
-        }
-        if(specificCard == null) {
-            specificCard = gameStack5.getSelectionModel().getSelectedItem();
-        }
-        if(specificCard == null) {
-            specificCard = gameStack6.getSelectionModel().getSelectedItem();
-        }
-        if(specificCard == null) {
-            specificCard = gameStack7.getSelectionModel().getSelectedItem();
-        }
-        if(specificCard == null) {
-            specificCard = turnedStock.getSelectionModel().getSelectedItem();
-        }
+
         mainApp.dialogBoxForEdit(specificCard);
     }
 
@@ -318,48 +183,15 @@ public class ViewController {
         cards.addAll(gameState.getTurnedStock().stack);
         turnedStock.setItems(cards);
 
-        cards = FXCollections.observableArrayList();
-        cards.addAll(gameState.getGameStacks()[0].stack);
-        gameStack1.setItems(cards);
-
-        cards = FXCollections.observableArrayList();
-        cards.addAll(gameState.getGameStacks()[1].stack);
-        gameStack2.setItems(cards);
-
-        cards = FXCollections.observableArrayList();
-        cards.addAll(gameState.getGameStacks()[2].stack);
-        gameStack3.setItems(cards);
-
-        cards = FXCollections.observableArrayList();
-        cards.addAll(gameState.getGameStacks()[3].stack);
-        gameStack4.setItems(cards);
-
-        cards = FXCollections.observableArrayList();
-        cards.addAll(gameState.getGameStacks()[4].stack);
-        gameStack5.setItems(cards);
-
-        cards = FXCollections.observableArrayList();
-        cards.addAll(gameState.getGameStacks()[5].stack);
-        gameStack6.setItems(cards);
-
-        cards = FXCollections.observableArrayList();
-        cards.addAll(gameState.getGameStacks()[6].stack);
-        gameStack7.setItems(cards);
-
-        cards = FXCollections.observableArrayList();
-        cards.addAll(gameState.getFinishStacks()[0].stack);
-        finishStack1.setItems(cards);
-
-        cards = FXCollections.observableArrayList();
-        cards.addAll(gameState.getFinishStacks()[1].stack);
-        finishStack2.setItems(cards);
-
-        cards = FXCollections.observableArrayList();
-        cards.addAll(gameState.getFinishStacks()[2].stack);
-        finishStack3.setItems(cards);
-
-        cards = FXCollections.observableArrayList();
-        cards.addAll(gameState.getFinishStacks()[3].stack);
-        finishStack4.setItems(cards);
+        for (int i = 0; i < 7; i++) {
+            cards = FXCollections.observableArrayList();
+            cards.addAll(gameState.getGameStacks()[i].stack);
+            stacks[i].setItems(cards);
+        }
+        for (int i = 0; i < 4; i++) {
+            cards = FXCollections.observableArrayList();
+            cards.addAll(gameState.getFinishStacks()[i].stack);
+            stacks[i+7].setItems(cards);
+        }
     }
 }
