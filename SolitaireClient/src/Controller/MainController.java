@@ -57,13 +57,22 @@ public class MainController {
 
 		} else {
 			int i = Integer.parseInt(returnString.split(" ")[5]) - 1;
-			int expected[] = new int[7], sizes[] = new int[7];
+			int addedValue = 0;
 			for (int j = 0; j < 7; j++) {
-				expected[i] = logic.getGameState().getGameStacks()[i].getMovable();
-				sizes[i] = imgState.getGameStacks()[i].getMovable();
+				if(!logic.getGameState().getGameStacks()[j].isEmpty() && !imgState.getGameStacks()[j+addedValue].isEmpty()) {
+					if (j == i && logic.getGameState().getGameStacks()[j].stack.peek().isHidden() && !imgState.getGameStacks()[j+addedValue].stack.peek().isHidden()) {
+						logic.getGameState().getGameStacks()[j].stack.pop();
+						logic.getGameState().getGameStacks()[j].addCard(imgState.getGameStacks()[j+addedValue].stack.peek());
+						return;
+					} else if (logic.getGameState().getGameStacks()[j].stack.isEmpty() && !imgState.getGameStacks()[j+addedValue].stack.isEmpty()) {
+						addedValue--;
+					} else if (!logic.getGameState().getGameStacks()[j].stack.peek().getCardValue().getValue().equals(imgState.getGameStacks()[j+addedValue].stack.peek().getCardValue().getValue()) && !logic.getGameState().getGameStacks()[j].stack.peek().getSuit().getValue().equals(imgState.getGameStacks()[j+addedValue].stack.peek().getSuit().getValue())) {
+						System.out.println("FEJL");
+					}
+				}else{
+					System.out.println("FEJL2");
+				}
 			}
-
-
 		}
 	}
 
