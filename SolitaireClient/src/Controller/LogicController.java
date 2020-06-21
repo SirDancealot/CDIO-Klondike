@@ -8,7 +8,7 @@ public class LogicController {
     private static LogicController logicController_instance = null;
 
     GameState gameState;
-    int[] randomOrder = {2,4,7,9,8,11,5,1,13,6,12,3,10,10,3,12,6,13,1,5,11,8,9,7,4,2,1,13,2,12,3,11,4,10,5,9,6,8,7,7,6,8,5,9,4,10,3,11,2,12,13,1};
+
 
     private LogicController(){
         gameState = GameState.getPrimary();
@@ -28,7 +28,6 @@ public class LogicController {
     public void setGameState(GameState gameState){
         this.gameState = gameState;
     }
-
 
     /*
     private String turnHiddenCard(){
@@ -64,9 +63,7 @@ public class LogicController {
 
     private String aceToFinishStack(){
         Card card;
-        int index = 0;
         for (GameStack gameStack : gameState.getGameStacks()) {
-            index++;
             if(!gameStack.isEmpty()) {
                 if (gameStack.stack.peek().getCardValue().getValue() == 1 && !gameStack.stack.peek().isHidden()) {
                     card = gameStack.stack.pop();
@@ -88,12 +85,11 @@ public class LogicController {
                 if(!gameStackTake.stack.elementAt(i).isHidden()){
                     for (GameStack gameStackReceive : gameState.getGameStacks()) {
                         if(!gameStackReceive.isEmpty()) {
-                            if (gameStackReceive.stack.peek().getColor() != gameStackTake.stack.elementAt(i).getColor()) {
-                                if (gameStackReceive.stack.peek().getCardValue().getValue() == gameStackTake.stack.elementAt(i).getCardValue().getValue() + 1) {
-                                    String returnString = "Move " + gameStackTake.stack.elementAt(i).toString() + " to " + gameStackReceive.stack.peek().toString();
-                                    gameStackReceive.addCards(gameStackTake.takeCards(i));
-                                    return returnString;
-                                }
+                            if (gameStackTake.stack.elementAt(i).canMoveToOnGameStack(gameStackReceive.stack.peek())) {
+                                String returnString = "Move " + gameStackTake.stack.elementAt(i).toString() + " to " + gameStackReceive.stack.peek().toString();
+                                gameStackReceive.addCards(gameStackTake.takeCards(i));
+                                return returnString;
+
                             }
                         }
                     }
@@ -107,18 +103,12 @@ public class LogicController {
     private String lastVisibleCardToFinishStack(){
         for (GameStack gameStack : gameState.getGameStacks()) {
             for (int i = 0; i < gameStack.size(); i++) {
-                if(!gameStack.stack.elementAt(i).isHidden()){
-                    if(gameStack.size() == i+1){
-                        for (FinishStack finishStack : gameState.getFinishStacks()) {
-                            if(!finishStack.isEmpty()) {
-                                if (finishStack.stack.peek().getCardValue().getValue() == gameStack.stack.elementAt(i).getCardValue().getValue() - 1) {
-                                    if (finishStack.stack.peek().getSuit().getValue() == gameStack.stack.elementAt(i).getSuit().getValue()) {
-                                        String returnString = "Move " + gameStack.stack.elementAt(i).toString() + " to " + finishStack.stack.peek().toString() + " on finish stack";
-                                        finishStack.addCards(gameStack.takeCards(i));
-                                        return returnString;
-                                    }
-                                }
-                            }
+                if(!gameStack.stack.elementAt(i).isHidden() && gameStack.size() == i+1){
+                    for (FinishStack finishStack : gameState.getFinishStacks()) {
+                        if(!finishStack.isEmpty() && gameStack.stack.elementAt(i).canMoveToOnFinishStack(finishStack.stack.peek())) {
+                            String returnString = "Move " + gameStack.stack.elementAt(i).toString() + " to " + finishStack.stack.peek().toString() + " on finish stack";
+                            finishStack.addCards(gameStack.takeCards(i));
+                            return returnString;
                         }
                     }
                     break;
@@ -177,25 +167,22 @@ public class LogicController {
                 }
             }
         }
+
         for (GameStack gameStack : gameState.getGameStacks()) {
             if(!gameStack.isEmpty() && !gameState.getTurnedStock().isEmpty()) {
-                if (gameState.getTurnedStock().stack.peek().getColor() != gameStack.stack.peek().getColor()) {
-                    if (gameState.getTurnedStock().stack.peek().getCardValue().getValue() == gameStack.stack.peek().getCardValue().getValue() - 1) {
-                        String returnString = "Move " + gameState.getTurnedStock().stack.peek().toString() +  " to " + gameStack.stack.peek().toString();
-                        gameStack.addCard(gameState.getTurnedStock().stack.pop());
-                        return returnString;
-                    }
+                if (gameState.getTurnedStock().stack.peek().canMoveToOnGameStack(gameStack.stack.peek())){
+                    String returnString = "Move " + gameState.getTurnedStock().stack.peek().toString() +  " to " + gameStack.stack.peek().toString();
+                    gameStack.addCard(gameState.getTurnedStock().stack.pop());
+                    return returnString;
                 }
             }
         }
         for (FinishStack finishStack : gameState.getFinishStacks()) {
             if(!finishStack.isEmpty() && !gameState.getTurnedStock().isEmpty()) {
-                if (gameState.getTurnedStock().stack.peek().getSuit().getValue() == finishStack.stack.peek().getSuit().getValue()) {
-                    if (gameState.getTurnedStock().stack.peek().getCardValue().getValue() == finishStack.stack.peek().getCardValue().getValue() + 1) {
-                        String returnString = "Move " + gameState.getTurnedStock().stack.peek().toString() +  " to " + finishStack.stack.peek().toString() + " on finish stack";
-                        finishStack.addCard(gameState.getTurnedStock().stack.pop());
-                        return returnString;
-                    }
+                if (gameState.getTurnedStock().stack.peek().canMoveToOnFinishStack(finishStack.stack.peek())) {
+                    String returnString = "Move " + gameState.getTurnedStock().stack.peek().toString() +  " to " + finishStack.stack.peek().toString() + " on finish stack";
+                    finishStack.addCard(gameState.getTurnedStock().stack.pop());
+                    return returnString;
                 }
             }
         }
@@ -229,7 +216,6 @@ public class LogicController {
             for (Card card : gameState.getStock().stack) {
                 card.setHidden(true);
             }
-
             gameState.getTurnedStock().stack.add(gameState.getStock().stack.pop());
             gameState.getTurnedStock().stack.peek().setHidden(false);
             gameState.getTurnedStock().stack.peek().setKnown(true);
@@ -255,12 +241,10 @@ public class LogicController {
         for (GameStack gameStack : gameState.getGameStacks()) {
             for (FinishStack finishStack : gameState.getFinishStacks()) {
                 if (!gameStack.isEmpty() && !finishStack.isEmpty()) {
-                    if (gameStack.stack.peek().getSuit().getValue() == finishStack.stack.peek().getSuit().getValue()) {
-                        if (gameStack.stack.peek().getCardValue().getValue() == finishStack.stack.peek().getCardValue().getValue() + 1) {
-                            returnString = "Move " + gameStack.stack.peek().toString() + " to " + finishStack.stack.peek().toString();
-                            finishStack.stack.add(gameStack.stack.pop());
-                            return returnString;
-                        }
+                    if (gameStack.stack.peek().canMoveToOnFinishStack(finishStack.stack.peek())) {
+                        returnString = "Move " + gameStack.stack.peek().toString() + " to " + finishStack.stack.peek().toString();
+                        finishStack.stack.add(gameStack.stack.pop());
+                        return returnString;
                     }
                 }
             }
@@ -281,13 +265,11 @@ public class LogicController {
                             }
                         }
                         if(!gameStackReceive.isEmpty()) {
-                            if (gameStackTake.stack.elementAt(i).getCardValue().getValue() == gameStackReceive.stack.peek().getCardValue().getValue() - 1) {
-                                if (gameStackTake.stack.elementAt(i).getColor() != gameStackReceive.stack.peek().getColor()) {
-                                    if (nonHiddenCardsBeforeThisInTake < nonHiddenCardsBeforeThisInReceive) {
-                                        String returnString = "Move " + gameStackTake.stack.elementAt(i).toString() + " to " + gameStackReceive.stack.peek().toString();
-                                        gameStackReceive.addCards(gameStackTake.takeCards(i));
-                                        return returnString;
-                                    }
+                            if (gameStackTake.stack.elementAt(i).canMoveToOnGameStack(gameStackReceive.stack.peek())) {
+                                if (nonHiddenCardsBeforeThisInTake < nonHiddenCardsBeforeThisInReceive) {
+                                    String returnString = "Move " + gameStackTake.stack.elementAt(i).toString() + " to " + gameStackReceive.stack.peek().toString();
+                                    gameStackReceive.addCards(gameStackTake.takeCards(i));
+                                    return returnString;
                                 }
                             }
                         }
@@ -309,7 +291,7 @@ public class LogicController {
             }
             for (GameStack gameStack : gameState.getGameStacks()) {
                 if(!gameStack.isEmpty()) {
-                    if ((card.getCardValue().getValue() == gameStack.stack.peek().getCardValue().getValue() - 1) && (card.getColor() != gameStack.stack.peek().getColor())) {
+                    if (card.canMoveToOnGameStack(gameStack.stack.peek())) {
                         return true;
                     }
                 }
@@ -319,11 +301,10 @@ public class LogicController {
             }
             for (FinishStack finishStack : gameState.getFinishStacks()) {
                 if(!finishStack.isEmpty()) {
-                    if ((card.getCardValue().getValue() == finishStack.stack.peek().getCardValue().getValue() + 1) && (card.getSuit().getValue() == finishStack.stack.peek().getSuit().getValue())) {
+                    if ((card.canMoveToOnFinishStack(finishStack.stack.peek()))) {
                         return true;
                     }
                 }
-
             }
         }
         for (Card card : gameState.getTurnedStock().stack) {
@@ -335,7 +316,7 @@ public class LogicController {
             }
             for (GameStack gameStack : gameState.getGameStacks()) {
                 if(!gameStack.isEmpty()) {
-                    if ((card.getCardValue().getValue() == gameStack.stack.peek().getCardValue().getValue() - 1) && (card.getColor() != gameStack.stack.peek().getColor())) {
+                    if (card.canMoveToOnGameStack(gameStack.stack.peek())) {
                         return true;
                     }
                 }
@@ -345,11 +326,10 @@ public class LogicController {
             }
             for (FinishStack finishStack : gameState.getFinishStacks()) {
                 if(!finishStack.isEmpty()) {
-                    if ((card.getCardValue().getValue() == finishStack.stack.peek().getCardValue().getValue() + 1) && (card.getSuit().getValue() == finishStack.stack.peek().getSuit().getValue())) {
+                    if ((card.canMoveToOnFinishStack(finishStack.stack.peek()))) {
                         return true;
                     }
                 }
-
             }
         }
         return false;
@@ -409,40 +389,6 @@ public class LogicController {
         return returnString;
     }
 
-    public void runGame(){
-        boolean running = true;
-        boolean moveSinceLastStockTurn = true;
-        while(running){
-            if(gameWon()){
-                System.out.println("YOU WON!");
-
-                break;
-            }else {
-                String moveString = makeMoveTest();
-
-                if (moveString == null) {
-                    running = false;
-                    System.out.println("GAME OVER!");
-                } else {
-                    if (moveString.equals("Turn the stock over, then turn new card from the stock") && !moveSinceLastStockTurn) {
-                        System.out.println("GAME OVER!");
-                        break;
-                    } else if (!moveString.equals("Turn the stock over, then turn new card from the stock") && !moveString.equals("Turn new card from the stock")) {
-                        moveSinceLastStockTurn = true;
-                    } else if (moveString.equals("Turn the stock over, then turn new card from the stock")) {
-                        moveSinceLastStockTurn = false;
-                    }
-
-                    //System.out.println(moveString);
-                    //System.out.println(gameState.countCardsInGame());
-
-                    Scanner scanner = new Scanner(System.in);
-                    scanner.nextLine();
-                }
-            }
-        }
-    }
-
     public void setupGame(GameState initialRead){
         gameState.getTurnedStock().addCard(initialRead.getTurnedStock().getTopCard());
         for (int i = 0; i < 7; i++) {
@@ -450,54 +396,4 @@ public class LogicController {
         }
     }
 
-    private CardStack makeStock(){
-        CardStack stock = new CardStack();
-        int counter = 1;
-        for (int number : randomOrder) {
-            Card card;
-            if(counter > 39){
-                card = new Card(Card.Suit.HEARTS,number);
-                card.setHidden(true);
-                stock.addCard(card);
-            }else if(counter > 26){
-                card = new Card(Card.Suit.CLUBS,number);
-                card.setHidden(true);
-                stock.addCard(card);
-            }else if(counter > 13){
-                card = new Card(Card.Suit.DIAMONDS,number);
-                card.setHidden(true);
-                stock.addCard(card);
-            }else if(counter > 0){
-                card = new Card(Card.Suit.SPADES,number);
-                card.setHidden(true);
-                stock.addCard(card);
-            }
-
-            counter ++;
-        }
-
-        return stock;
-    }
-
-    private void makeGameStateFromStock(CardStack stock){
-        GameStack[] gameStacks = new GameStack[7];
-        for (int i = 0; i < 7; i++) {
-            gameStacks[i] = new GameStack();
-        }
-        for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 7; j++) {
-                if(i == j){
-                    Card card = stock.stack.pop();
-                    card.setHidden(false);
-                    card.setKnown(true);
-                    gameStacks[j].addCard(card);
-                }else if(i < j){
-                    Card card = stock.stack.pop();
-                    gameStacks[j].addCard(card);
-                }
-            }
-        }
-        gameState.setGameStacks(gameStacks);
-        gameState.setStock(stock);
-    }
 }
