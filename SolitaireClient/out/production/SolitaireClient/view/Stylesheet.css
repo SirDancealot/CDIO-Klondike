@@ -9,8 +9,8 @@
     -fx-background-insets: 0 0 0 0, 0, 1, 2;
 }
 
-.background {
-    -fx-background-color: #F8F8F8;
+.background1 {
+    -fx-background-color: #c9dec3;
 }
 
 .label-bright {
@@ -18,4 +18,8 @@
     -fx-text-fill: #333333;
     -fx-opacity: 1;
     -fx-font-family: Montserrat;
+}
+
+.text-above {
+    -fx-background-color: #80A53F;
 }

@@ -20,7 +20,6 @@ import model.dto.Card;
 public class MainApp extends Application {
     private Stage primaryStage;
     private AnchorPane rootLayout;
-    boolean isPushed = false;
 
 
     @Override
@@ -50,7 +49,7 @@ public class MainApp extends Application {
         }
     }
 
-    public void dialogBoxForAdd(Card card) {
+    public void dialogBoxForAdd() {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("AddCard.fxml"));
@@ -84,7 +83,7 @@ public class MainApp extends Application {
             });
 
             controller.setStage(dialogStage);
-            controller.setCard(card);
+            controller.populateChoiceBox();
 
             dialogStage.showAndWait();
         } catch (IOException e) {
