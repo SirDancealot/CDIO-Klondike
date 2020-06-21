@@ -4,7 +4,7 @@ import numpy as np
 from encode import *
 from comm import Comm
 
-confThreshold = 0.8  # Confidence threshold
+confThreshold = 0.7  # Confidence threshold
 nmsThreshold = 0.4  # Non-maximum suppression threshold
 inpWidth = 608  # Width of network's input image
 inpHeight = 608  # Height of network's input image
@@ -142,7 +142,7 @@ def registrer_piles(img_width):
     for i in range(0, len(duplicates), 2):
         l1 = duplicate_boxes[i][0] if duplicate_boxes[i][0] < duplicate_boxes[i + 1][0] else duplicate_boxes[i + 1][0]
         l2 = duplicate_boxes[i][0] if duplicate_boxes[i][0] > duplicate_boxes[i + 1][0] else duplicate_boxes[i + 1][0]
-        row_width = int((l2 - l1) / 2)
+        row_width = int((l2 - l1) * 0.75)
         if True not in np.in1d(row_x_cords, range(l1 - row_width, l1 + row_width)):
             row_x_cords.append(l1)
     row_x_cords.sort()
@@ -235,7 +235,7 @@ while (True):
             print("Error getting webcam feed")
             break
 
-        cv2.imshow('frame', frame)
+        #cv2.imshow('frame', frame)
         ret, frame = cap.read()
         cv2.waitKey(50)
         # frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
