@@ -4,13 +4,13 @@ import numpy as np
 from encode import *
 from comm import Comm
 
-confThreshold = 0.7  # Confidence threshold
+confThreshold = 0.5  # Confidence threshold
 nmsThreshold = 0.4  # Non-maximum suppression threshold
 inpWidth = 608  # Width of network's input image
 inpHeight = 608  # Height of network's input image
 
-img_name = "./v7.jpg"
-capture_from_webcam = True
+img_name = "./v1.jpg"
+capture_from_webcam = False
 
 # Load Yolo
 net = cv2.dnn.readNet("yolov3_training_last.weights", "yolov3_training.cfg")
@@ -60,6 +60,7 @@ def postprocess(_frame, _outs):
     class_ids = []
     boxes = []
 
+
     for out in _outs:
         for detection in out:
             scores = detection[5:]
@@ -85,6 +86,11 @@ def postprocess(_frame, _outs):
                 else:
                     box = [left, top, width, height]
                     singles.append((class_id, box))
+
+                for tup in singles:
+                    if tup[1] in duplicate_boxes:
+                        tup[1][0] = min(box1[0], box2[0])
+
                 class_ids.append(class_id)
                 classIds_o.append(class_id)
                 confidences.append(float(confidence))
@@ -124,6 +130,15 @@ def registrer_piles(img_width):
     row_x_cords = []
     game_rows = [[], [], [], [], [], [], []]
     top_cards = []
+
+
+
+
+    for i in range(len(singles)):
+        if singles[i] in duplicate_boxes[i]:
+            if singles[i][0][1] > duplicate_boxes[i][0][1]:
+                singles[i][0][1] = duplicate_boxes[i][0][1]
+
     for i in range(0, len(duplicates), 2):
         l1 = duplicate_boxes[i][0] if duplicate_boxes[i][0] < duplicate_boxes[i + 1][0] else duplicate_boxes[i + 1][0]
         l2 = duplicate_boxes[i][0] if duplicate_boxes[i][0] > duplicate_boxes[i + 1][0] else duplicate_boxes[i + 1][0]
@@ -203,6 +218,8 @@ def class_to_card(cls):
 
 
 cap = cv2.VideoCapture(0)
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 3840)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 2160)
 comm = Comm()
 
 while (True):
@@ -212,13 +229,16 @@ while (True):
     # Capture frame-by-frame
     if capture_from_webcam:
         ret, frame = cap.read()
+        cv2.waitKey(50)
 
         if not ret:
             print("Error getting webcam feed")
             break
 
         cv2.imshow('frame', frame)
-        cv2.waitKey(1)
+        ret, frame = cap.read()
+        cv2.waitKey(50)
+        #frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
 
     # k = cv2.waitKey(1)
     # if k % 256 == 27:
@@ -234,7 +254,7 @@ while (True):
         if not capture_from_webcam:
             frame = cv2.imread(img_name)
         cv2.imwrite("./split_images/image.png", frame)
-        blob = cv2.dnn.blobFromImage(frame, 1 / 255.0, (832, 1024), (0, 0, 0), True, crop=False)
+        blob = cv2.dnn.blobFromImage(frame, 1 / 255.0, (1600, 1600), (0, 0, 0), True, crop=False)
         net.setInput(blob)
         outs = net.forward(output_layers)
         postprocess(frame, outs)

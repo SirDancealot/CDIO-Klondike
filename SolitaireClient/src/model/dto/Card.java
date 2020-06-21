@@ -58,6 +58,14 @@ public class Card {
         }
     }
 
+    public boolean canMoveToOnGameStack(Card card){
+        return(color != card.getColor() && cardValue.getValue() == card.getCardValue().getValue() - 1);
+    }
+
+    public boolean canMoveToOnFinishStack(Card card){
+        return(suit.getValue() == card.getSuit().getValue() && cardValue.getValue() == card.getCardValue().getValue() + 1);
+    }
+
     public void setKnown(boolean known) {
         isKnown = known;
     }
@@ -65,24 +73,12 @@ public class Card {
         return isKnown;
     }
 
-    public void setColor(Color color) {
-        this.color = color;
-    }
     public Color getColor(){
         return color;
     }
 
     public StringProperty getStringValue() {
         return stringValue;
-    }
-
-    public boolean isBlack() {
-        if (hidden) return false;
-        return suit.getValue() == Suit.CLUBS || suit.getValue() == Suit.SPADES;
-    }
-    public boolean isRed() {
-        if (hidden) return false;
-        return suit.getValue() == Suit.DIAMONDS || suit.getValue() == Suit.HEARTS;
     }
 
     public void setHidden(boolean hidden) {
