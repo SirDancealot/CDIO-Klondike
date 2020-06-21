@@ -36,9 +36,10 @@ class Card:
 
 
 class GameState:
-    gameCards = [[], [], [], [], [], [], []]
-    finalCards = [None, None, None, None]
-    shownStock = None
+    def __init__(self):
+        self.gameCards = [[], [], [], [], [], [], []]
+        self.finalCards = [None, None, None, None]
+        self.shownStock = None
 
 
 HIDDEN = Card(Suit.HIDDEN, Value.HIDDEN)

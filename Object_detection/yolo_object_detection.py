@@ -4,13 +4,13 @@ import numpy as np
 from encode import *
 from comm import Comm
 
-confThreshold = 0.5  # Confidence threshold
+confThreshold = 0.8  # Confidence threshold
 nmsThreshold = 0.4  # Non-maximum suppression threshold
 inpWidth = 608  # Width of network's input image
 inpHeight = 608  # Height of network's input image
 
 img_name = "./v1.jpg"
-capture_from_webcam = False
+capture_from_webcam = True
 
 # Load Yolo
 net = cv2.dnn.readNet("yolov3_training_last.weights", "yolov3_training.cfg")
@@ -60,7 +60,6 @@ def postprocess(_frame, _outs):
     class_ids = []
     boxes = []
 
-
     for out in _outs:
         for detection in out:
             scores = detection[5:]
@@ -81,15 +80,19 @@ def postprocess(_frame, _outs):
                     box1 = boxes_o[i]
                     box2 = [left, top, width, height]
 
+                    if box1[0] > box2[0]:
+                        boxes_o[i] = box2
+                        left = box1[0]
+                        top = box1[1]
+                        width = box1[2]
+                        height = box1[3]
+                        box2 = box1
+
                     duplicate_boxes.append(box1)
                     duplicate_boxes.append(box2)
                 else:
                     box = [left, top, width, height]
                     singles.append((class_id, box))
-
-                for tup in singles:
-                    if tup[1] in duplicate_boxes:
-                        tup[1][0] = min(box1[0], box2[0])
 
                 class_ids.append(class_id)
                 classIds_o.append(class_id)
@@ -130,9 +133,6 @@ def registrer_piles(img_width):
     row_x_cords = []
     game_rows = [[], [], [], [], [], [], []]
     top_cards = []
-
-
-
 
     for i in range(len(singles)):
         if singles[i] in duplicate_boxes[i]:
@@ -238,7 +238,7 @@ while (True):
         cv2.imshow('frame', frame)
         ret, frame = cap.read()
         cv2.waitKey(50)
-        #frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
+        # frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
 
     # k = cv2.waitKey(1)
     # if k % 256 == 27:
@@ -254,7 +254,7 @@ while (True):
         if not capture_from_webcam:
             frame = cv2.imread(img_name)
         cv2.imwrite("./split_images/image.png", frame)
-        blob = cv2.dnn.blobFromImage(frame, 1 / 255.0, (1600, 1600), (0, 0, 0), True, crop=False)
+        blob = cv2.dnn.blobFromImage(frame, 1 / 255.0, (1280, 1280), (0, 0, 0), True, crop=False)
         net.setInput(blob)
         outs = net.forward(output_layers)
         postprocess(frame, outs)
@@ -264,9 +264,11 @@ while (True):
         # cv2.imwrite("final.png", image)
         print("Final image saved")
 
-        singles = []
-        duplicates = []
-        duplicate_boxes = []
+        singles = list()
+        duplicates = list()
+        duplicate_boxes = list()
+        classIds_o = list()
+        boxes_o = list()
         lowest_y_box = None
 
 comm.close()

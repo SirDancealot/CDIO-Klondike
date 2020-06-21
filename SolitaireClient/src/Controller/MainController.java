@@ -55,7 +55,7 @@ public class MainController {
 			logic.getGameState().getTurnedStock().getTopCard().setSuit(imgState.getTurnedStock().getTopCard().getSuit().getValue());
 			logic.getGameState().getTurnedStock().getTopCard().setCardValue(imgState.getTurnedStock().getTopCard().getCardValue().get());
 
-		} else {
+		} /*else {
 			int i = Integer.parseInt(returnString.split(" ")[5]) - 1;
 			int addedValue = 0;
 			for (int j = 0; j < 7; j++) {
@@ -69,10 +69,30 @@ public class MainController {
 					} else if (!logic.getGameState().getGameStacks()[j].stack.peek().getCardValue().getValue().equals(imgState.getGameStacks()[j+addedValue].stack.peek().getCardValue().getValue()) && !logic.getGameState().getGameStacks()[j].stack.peek().getSuit().getValue().equals(imgState.getGameStacks()[j+addedValue].stack.peek().getSuit().getValue())) {
 						System.out.println("FEJL");
 					}
-				}else{
-					System.out.println("FEJL2");
 				}
 			}
+
+		}*/
+		else {
+			int i = Integer.parseInt(returnString.split(" ")[5]) - 1;
+			GameStack[] gStacks = logic.getGameState().getGameStacks();
+			int gStackLen[] = new int[7];
+			int imgStackLen[] = new int[7];
+			for (int j = 0; j < 7; j++) {
+				gStackLen[j] = gStacks[j].getMovable();
+				imgStackLen[j] = imgState.getGameStacks()[j].getMovable();
+			}
+			gStackLen[i]++;
+
+			int a = 0, b = 0;
+			while (a < i) {
+				if ((gStackLen[a] != 0 && imgStackLen[b] != 0) || (gStackLen[a] == 0 && imgStackLen[b] == 0)) {
+					b++;
+				}
+				a++;
+			}
+			logic.getGameState().getGameStacks()[a].getTopCard().setCardValue(imgState.getGameStacks()[b].getTopCard().getCardValue().getValue());
+			logic.getGameState().getGameStacks()[a].getTopCard().setSuit(imgState.getGameStacks()[b].getTopCard().getSuit().get());
 		}
 	}
 
