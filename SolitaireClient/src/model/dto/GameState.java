@@ -9,8 +9,17 @@ public class GameState {
     private static GameState primaryGameState = null;
 
     public static GameState getPrimary() {
-        if (primaryGameState == null)
+        if (primaryGameState == null) {
             primaryGameState = new GameState();
+            for (int i = 0; i < 23; i++) {
+                primaryGameState.getStock().addCard(new Card(Card.Suit.HIDDEN, 0));
+            }
+        }
+        for (int i = 0; i < 7; i++) {
+            for (int j = 0; j < i; j++) {
+                primaryGameState.getGameStacks()[i].addCard(new Card(Card.Suit.HIDDEN, 0));
+            }
+        }
         return primaryGameState;
     }
 

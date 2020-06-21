@@ -218,7 +218,7 @@ public class LogicController {
     private String turnNewCardFromStockTest(){
 
         if(gameState.getStock().size() > 0){
-            String returnString = "Turn new card from the stock";
+            String returnString = "Turn new " + (gameState.getStock().stack.peek().isKnown() ? "" : "hidden ") + "card from the stock";
             gameState.getTurnedStock().stack.add(gameState.getStock().stack.pop());
             gameState.getTurnedStock().stack.peek().setHidden(false);
             gameState.getTurnedStock().stack.peek().setKnown(true);
@@ -443,11 +443,11 @@ public class LogicController {
         }
     }
 
-    public void setupGame(){
-        gameState = new GameState();
-        CardStack stock = makeStock();
-        stock.shuffle();
-        makeGameStateFromStock(stock);
+    public void setupGame(GameState initialRead){
+        gameState.getTurnedStock().addCard(initialRead.getTurnedStock().getTopCard());
+        for (int i = 0; i < 7; i++) {
+            gameState.getGameStacks()[i].addCard(initialRead.getGameStacks()[i].getTopCard());
+        }
     }
 
     private CardStack makeStock(){

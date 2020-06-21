@@ -8,9 +8,9 @@ confThreshold = 0.7  # Confidence threshold
 nmsThreshold = 0.4  # Non-maximum suppression threshold
 inpWidth = 608  # Width of network's input image
 inpHeight = 608  # Height of network's input image
-img_name = "./TEST" \
-           ".jpg"
-capture_from_webcam = False
+
+img_name = "./v7.jpg"
+capture_from_webcam = True
 
 # Load Yolo
 net = cv2.dnn.readNet("yolov3_training_last.weights", "yolov3_training.cfg")
@@ -218,6 +218,7 @@ while (True):
             break
 
         cv2.imshow('frame', frame)
+        cv2.waitKey(1)
 
     # k = cv2.waitKey(1)
     # if k % 256 == 27:
@@ -232,7 +233,6 @@ while (True):
         print("Space pressed")
         if not capture_from_webcam:
             frame = cv2.imread(img_name)
-            #cv2.imshow('frame', frame)
         cv2.imwrite("./split_images/image.png", frame)
         blob = cv2.dnn.blobFromImage(frame, 1 / 255.0, (832, 1024), (0, 0, 0), True, crop=False)
         net.setInput(blob)
