@@ -38,7 +38,8 @@ public class MainController {
 			if (view.requestNextMove()) {
 				if (requestImage) {
 					requestImage = false;
-					updateGameState(returnString, comm.requestNewState());
+					view.loadingAlert(returnString, comm.requestNewState());
+					//updateGameState(returnString, comm.requestNewState());
 				}
 				view.setNextMove(false);
 				returnString = logic.makeMoveTest();
@@ -50,7 +51,7 @@ public class MainController {
 		}
 	}
 
-	private void updateGameState(String returnString, GameState imgState) {
+	public void updateGameState(String returnString, GameState imgState) {
 		if (returnString.equals("Turn new hidden card from the stock")) {
 			logic.getGameState().getTurnedStock().getTopCard().setSuit(imgState.getTurnedStock().getTopCard().getSuit().getValue());
 			logic.getGameState().getTurnedStock().getTopCard().setCardValue(imgState.getTurnedStock().getTopCard().getCardValue().get());

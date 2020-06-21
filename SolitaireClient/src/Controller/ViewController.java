@@ -9,6 +9,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import model.dto.Card;
 import model.dto.GameState;
 import view.MainApp;
@@ -19,6 +20,7 @@ public class ViewController {
     AtomicBoolean nextMove = new AtomicBoolean(false);
 
     private static volatile ViewController INSTANCE = null;
+    private Stage editStage;
 
     public ViewController() throws Exception {
         if (INSTANCE == null)
@@ -165,5 +167,18 @@ public class ViewController {
 
     public TableView<Card>[] getStacks() {
         return stacks;
+    }
+
+    public void loadingAlert(String returnString, GameState gameState) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.initOwner(editStage);
+        alert.setTitle("Loading...");
+        alert.setHeaderText("Waiting on object detection.");
+        alert.setContentText("loading position of cards.");
+
+        MainController mainController = MainController.getINSTANCE();
+        mainController.updateGameState(returnString,gameState);
+
+        alert.close();
     }
 }
