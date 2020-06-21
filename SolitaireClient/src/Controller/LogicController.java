@@ -375,6 +375,9 @@ public class LogicController {
         if(returnString != null){
             return returnString;
         }
+
+        //TODO if all cards less then top cards are used, move cards to finish stack
+
         returnString = fullVisibleStackToStack();
         if(returnString != null){
             return returnString;
