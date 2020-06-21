@@ -69,11 +69,13 @@ public class LogicController {
             if(!gameStack.isEmpty()) {
                 if (gameStack.stack.peek().getCardValue().getValue() == 1 && !gameStack.stack.peek().isHidden()) {
                     card = gameStack.stack.peek();
+                    int finishStackNumber = 0;
                     for (FinishStack finishStack : gameState.getFinishStacks()) {
+                        finishStackNumber++;
                         if (finishStack.isEmpty()) {
                             finishStack.stack.add(card);
                             gameStack.stack.pop();
-                            return "Move " + card.toString() + " from GameStack" + gameStackNumber + " to an empty FinishStack";
+                            return "Move " + card.toString() + " from GameStack" + gameStackNumber + " to an empty FinishStack" + finishStackNumber;
                         }
                     }
                 }
@@ -113,9 +115,11 @@ public class LogicController {
             gameStackNumber++;
             for (int i = 0; i < gameStack.size(); i++) {
                 if(!gameStack.stack.elementAt(i).isHidden() && gameStack.size() == i+1){
+                    int finishStackNumber = 0;
                     for (FinishStack finishStack : gameState.getFinishStacks()) {
+                        finishStackNumber++;
                         if(!finishStack.isEmpty() && gameStack.stack.elementAt(i).canMoveToOnFinishStack(finishStack.stack.peek())) {
-                            String returnString = "Move " + gameStack.stack.elementAt(i).toString() + "from GameStack " + gameStackNumber + " to " + finishStack.stack.peek().toString() + " on finish stack";
+                            String returnString = "Move " + gameStack.stack.elementAt(i).toString() + "from GameStack " + gameStackNumber + " to " + finishStack.stack.peek().toString() + " on FinishStack" + finishStackNumber;
                             finishStack.addCards(gameStack.takeCards(i));
                             return returnString;
                         }
@@ -152,12 +156,12 @@ public class LogicController {
     private String playCardFromTurnedStock(){
         if(!gameState.getTurnedStock().isEmpty()){
             if(gameState.getTurnedStock().stack.peek().getCardValue().getValue() == 13){
-                String returnString = null;
+                String returnString;
                 int index = 0;
                 for (GameStack gameStack : gameState.getGameStacks()) {
                     index++;
                     if(gameStack.isEmpty()){
-                        returnString = "Move " + gameState.getTurnedStock().stack.peek().toString() + " from stock to GameStack " + index;
+                        returnString = "Move " + gameState.getTurnedStock().stack.peek().toString() + " from stock to GameStack" + index;
                         gameStack.addCard(gameState.getTurnedStock().stack.pop());
                         return returnString;
                     }
@@ -166,10 +170,12 @@ public class LogicController {
         }
         if(!gameState.getTurnedStock().isEmpty()){
             if(gameState.getTurnedStock().stack.peek().getCardValue().getValue() == 1){
-                String returnString = null;
+                String returnString;
+                int finishStackNumber = 0;
                 for (FinishStack finishStack : gameState.getFinishStacks()) {
+                    finishStackNumber++;
                     if(finishStack.isEmpty()){
-                        returnString = "Move " + gameState.getTurnedStock().stack.peek().toString() + " from stock to empty finish stack";
+                        returnString = "Move " + gameState.getTurnedStock().stack.peek().toString() + " from stock to empty FinishStack" + finishStackNumber;
                         finishStack.addCard(gameState.getTurnedStock().stack.pop());
                         return returnString;
                     }
@@ -187,10 +193,12 @@ public class LogicController {
                 }
             }
         }
+        int finishStackNumber = 0;
         for (FinishStack finishStack : gameState.getFinishStacks()) {
+            finishStackNumber++;
             if(!finishStack.isEmpty() && !gameState.getTurnedStock().isEmpty()) {
                 if (gameState.getTurnedStock().stack.peek().canMoveToOnFinishStack(finishStack.stack.peek())) {
-                    String returnString = "Move " + gameState.getTurnedStock().stack.peek().toString() +  " from stock to " + finishStack.stack.peek().toString() + " on finish stack";
+                    String returnString = "Move " + gameState.getTurnedStock().stack.peek().toString() +  " from stock to " + finishStack.stack.peek().toString() + " on FinishStack" + finishStackNumber;
                     finishStack.addCard(gameState.getTurnedStock().stack.pop());
                     return returnString;
                 }
@@ -251,10 +259,12 @@ public class LogicController {
         int gameStackNumber = 0;
         for (GameStack gameStack : gameState.getGameStacks()) {
             gameStackNumber++;
+            int finishStackNumber = 0;
             for (FinishStack finishStack : gameState.getFinishStacks()) {
+                finishStackNumber++;
                 if (!gameStack.isEmpty() && !finishStack.isEmpty()) {
                     if (gameStack.stack.peek().canMoveToOnFinishStack(finishStack.stack.peek())) {
-                        returnString = "Move " + gameStack.stack.peek().toString() + " from GameStack" + gameStackNumber + " to " + finishStack.stack.peek().toString() + " on FinishStack";
+                        returnString = "Move " + gameStack.stack.peek().toString() + " from GameStack" + gameStackNumber + " to " + finishStack.stack.peek().toString() + " on FinishStack" + finishStackNumber;
                         finishStack.stack.add(gameStack.stack.pop());
                         return returnString;
                     }
