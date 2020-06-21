@@ -28,7 +28,7 @@ public class CardEditController {
         cardValue.setText(card.getCardValue().getValue().toString());
     }
 
-    public boolean validinput(boolean changeSuit, boolean changeValue) {
+    public boolean validInput(boolean changeSuit, boolean changeValue) {
         String message = "";
 
         boolean validSuit = false;
@@ -74,7 +74,7 @@ public class CardEditController {
         boolean changeSuit = !lastSuit.toString().equals(suit.getText().toUpperCase());
         boolean changeValue = lastValue != Integer.parseInt(cardValue.getText());
 
-        if(validinput(changeSuit,changeValue)) {
+        if(validInput(changeSuit,changeValue)) {
             if(changeSuit) {
                 card.setSuit(Card.Suit.valueOf(suit.getText().toUpperCase()));
             }

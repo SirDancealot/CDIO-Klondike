@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class LogicController {
     private static LogicController logicController_instance = null;
 
-    GameState gameState;
+    private volatile GameState gameState;
     int[] randomOrder = {2,4,7,9,8,11,5,1,13,6,12,3,10,10,3,12,6,13,1,5,11,8,9,7,4,2,1,13,2,12,3,11,4,10,5,9,6,8,7,7,6,8,5,9,4,10,3,11,2,12,13,1};
 
     private LogicController(){

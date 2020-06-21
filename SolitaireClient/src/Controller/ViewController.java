@@ -109,7 +109,7 @@ public class ViewController {
 
     @FXML
     private void addCard() {
-
+        mainApp.dialogBoxForAdd();
     }
 
     @FXML
@@ -146,19 +146,24 @@ public class ViewController {
         ObservableList<Card> cards = FXCollections.observableArrayList();
         cards.addAll(gameState.getTurnedStock().stack);
         turnedStock.setItems(cards);
-        turnedStock.setBackground(new Background(new BackgroundFill(Color.rgb(201, 222, 195), CornerRadii.EMPTY, Insets.EMPTY)));
 
         for (int i = 0; i < 7; i++) {
             cards = FXCollections.observableArrayList();
             cards.addAll(gameState.getGameStacks()[i].stack);
             stacks[i].setItems(cards);
-            stacks[i].setBackground(new Background(new BackgroundFill(Color.rgb(201, 222, 195), CornerRadii.EMPTY, Insets.EMPTY)));
         }
         for (int i = 0; i < 4; i++) {
             cards = FXCollections.observableArrayList();
             cards.addAll(gameState.getFinishStacks()[i].stack);
             stacks[i+7].setItems(cards);
-            stacks[i+7].setBackground(new Background(new BackgroundFill(Color.rgb(201, 222, 195), CornerRadii.EMPTY, Insets.EMPTY)));
         }
+    }
+
+    public TableView<Card> getSpecificStack(int item) {
+        return stacks[item];
+    }
+
+    public TableView<Card>[] getStacks() {
+        return stacks;
     }
 }
