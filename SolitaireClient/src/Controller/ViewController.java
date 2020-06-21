@@ -80,10 +80,6 @@ public class ViewController {
         }
 
         for (TableView<Card> t : stacks) {
-            t.setBackground(new Background(new BackgroundFill(Color.rgb(201, 222, 195), CornerRadii.EMPTY, Insets.EMPTY)));
-        }
-
-        for (TableView<Card> t : stacks) {
             t.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
                 if (newSelection != null) {
                     clearSelections(t);
