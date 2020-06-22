@@ -1,5 +1,11 @@
 package Controller;
 
+import com.sun.javafx.property.adapter.PropertyDescriptor;
+import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -18,6 +24,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ViewController {
     AtomicBoolean nextMove = new AtomicBoolean(false);
+
+    private static final Alert loadingAlert = new Alert(Alert.AlertType.INFORMATION);
 
     private static volatile ViewController INSTANCE = null;
     private Stage editStage;
@@ -61,6 +69,8 @@ public class ViewController {
 
     private MainApp mainApp;
 
+
+
     @FXML
     private void initialize() {
         stacks = new TableView[] {gameStack1, gameStack2, gameStack3, gameStack4, gameStack5, gameStack6, gameStack7, finishStack1, finishStack2, finishStack3, finishStack4, turnedStock};
@@ -68,6 +78,10 @@ public class ViewController {
         stackNumbers = new TableColumn[] {gameStack1Number, gameStack2Number, gameStack3Number, gameStack4Number, gameStack5Number, gameStack6Number, gameStack7Number, finishStack1Number, finishStack2Number, finishStack3Number, finishStack4Number, turnedStockNumber};
         moveString.setEditable(false);
 
+        loadingAlert.setTitle("Loading...");
+        loadingAlert.setHeaderText("Waiting on object detection.");
+        loadingAlert.setContentText("loading position of cards.");
+        //loadingAlert.getButtonTypes().clear();
 
         for (TableColumn<Card, String> t : stackNumbers) {
             t.setCellValueFactory(cellData -> cellData.getValue().getStringValue());
@@ -169,16 +183,11 @@ public class ViewController {
         return stacks;
     }
 
-    public void loadingAlert(String returnString, GameState gameState) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.initOwner(editStage);
-        alert.setTitle("Loading...");
-        alert.setHeaderText("Waiting on object detection.");
-        alert.setContentText("loading position of cards.");
+    public void showLoadingAlert() {
+    	Platform.runLater(loadingAlert::show);
+    }
 
-        MainController mainController = MainController.getINSTANCE();
-        mainController.updateGameState(returnString,gameState);
-
-        alert.close();
+    public void hideLoadingAlert() {
+        Platform.runLater(loadingAlert::close);
     }
 }
