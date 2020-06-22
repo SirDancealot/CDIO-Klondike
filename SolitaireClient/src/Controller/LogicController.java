@@ -120,7 +120,7 @@ public class LogicController {
                         finishStackNumber++;
                         if(!finishStack.isEmpty() && gameStack.stack.elementAt(i+1).canMoveToOnFinishStack(finishStack.stack.peek())) {
                             String returnString = "Move " + gameStack.stack.elementAt(i+1).toString() + "from GameStack " + gameStackNumber + " to " + finishStack.stack.peek().toString() + " on FinishStack" + finishStackNumber;
-                            finishStack.addCards(gameStack.takeCards(i));
+                            finishStack.addCards(gameStack.takeCards(i+1));
                             return returnString;
                         }
                     }
