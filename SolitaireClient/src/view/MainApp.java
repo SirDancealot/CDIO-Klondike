@@ -33,7 +33,7 @@ public class MainApp extends Application {
     private void initRootLayout() {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("ListOfCards.fxml"));
+            loader.setLocation(MainApp.class.getResource("MainView.fxml"));
             rootLayout = loader.load();
 
             Scene scene = new Scene(rootLayout);
