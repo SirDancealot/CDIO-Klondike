@@ -113,13 +113,13 @@ public class LogicController {
         for (GameStack gameStack : gameState.getGameStacks()) {
             gameStackNumber++;
             for (int i = 0; i < gameStack.size(); i++) {
-                if(!gameStack.stack.elementAt(i).isHidden() && gameStack.size() == i+1){
+                if(!gameStack.stack.elementAt(i).isHidden() && gameStack.size() == i+2){
                     int finishStackNumber = 0;
                     for (FinishStack finishStack : gameState.getFinishStacks()) {
                         finishStackNumber++;
-                        if(!finishStack.isEmpty() && gameStack.stack.elementAt(i).canMoveToOnFinishStack(finishStack.stack.peek())) {
-                            String returnString = "Move " + gameStack.stack.elementAt(i).toString() + "from GameStack " + gameStackNumber + " to " + finishStack.stack.peek().toString() + " on FinishStack" + finishStackNumber;
-                            finishStack.addCards(gameStack.takeCards(i));
+                        if(!finishStack.isEmpty() && gameStack.stack.elementAt(i+1).canMoveToOnFinishStack(finishStack.stack.peek())) {
+                            String returnString = "Move " + gameStack.stack.elementAt(i+1).toString() + "from GameStack " + gameStackNumber + " to " + finishStack.stack.peek().toString() + " on FinishStack" + finishStackNumber;
+                            finishStack.addCards(gameStack.takeCards(i+1));
                             return returnString;
                         }
                     }
