@@ -1,6 +1,6 @@
-package Controller.runtime;
+package controller.runtime;
 
-import Controller.view.ViewController;
+import controller.view.ViewController;
 import model.dto.GameStack;
 import model.dto.GameState;
 

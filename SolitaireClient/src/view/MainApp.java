@@ -1,9 +1,9 @@
 package view;
 
-import Controller.runtime.MainController;
-import Controller.view.AddCardController;
-import Controller.view.CardEditController;
-import Controller.view.ViewController;
+import controller.runtime.MainController;
+import controller.view.AddCardController;
+import controller.view.CardEditController;
+import controller.view.ViewController;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;

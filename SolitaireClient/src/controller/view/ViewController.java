@@ -1,4 +1,4 @@
-package Controller.view;
+package controller.view;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
