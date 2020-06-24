@@ -259,7 +259,7 @@ while (True):
                 classIds_o = list()
                 boxes_o = list()
                 lowest_y_box = None
-                print("Space pressed")
+                print("Registrering cards on webcam")
                 if not capture_from_webcam:
                     frame = cv2.imread(img_name)
                 cv2.imwrite("./split_images/image.png", frame)
