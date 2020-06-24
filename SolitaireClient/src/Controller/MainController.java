@@ -33,8 +33,9 @@ public class MainController {
 		view.updateView(logic.getGameState());
 		boolean requestImage = false;
 		String returnString = null;
+		boolean playing = true;
 
-		while (true) {
+		while (playing) {
 			if (view.requestNextMove()) {
 				if (requestImage) {
 					requestImage = false;
@@ -43,13 +44,22 @@ public class MainController {
 					view.hideLoadingAlert();
 				}
 				view.setNextMove(false);
+				if (logic.gameWon()) {
+					view.setText("The game has been won");
+					break;
+				}
 				returnString = logic.makeMoveTest();
 				if (returnString.contains("hidden"))
 					requestImage = true;
-				view.setText(returnString.isEmpty() ? "You lost" : returnString);
+				if (returnString.isEmpty()) {
+					playing = false;
+					returnString = "You lost";
+				}
+				view.setText(returnString);
 				view.updateView(logic.getGameState());
 			}
 		}
+		comm.close();
 	}
 
 	public void updateGameState(String returnString, GameState imgState) throws IOException {
@@ -87,6 +97,7 @@ public class MainController {
 				}
 			} catch (Exception e) {
 				tryAgain = true;
+				System.out.println("Error in image, trying again");
 				imgState = CommController.getINSTANCE().requestNewState();
 			}
 
