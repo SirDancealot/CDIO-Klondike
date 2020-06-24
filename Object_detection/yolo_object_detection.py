@@ -222,7 +222,7 @@ cap.set(cv2.CAP_PROP_FRAME_WIDTH, 3840)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 2160)
 comm = Comm()
 
-while (True):
+while True:
     # if comm.is_ready():
     response = comm.recv().decode("utf-8")
     print(response)
@@ -235,7 +235,7 @@ while (True):
             print("Error getting webcam feed")
             break
 
-        #cv2.imshow('frame', frame)
+        # cv2.imshow('frame', frame)
         ret, frame = cap.read()
         cv2.waitKey(50)
         # frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
@@ -251,7 +251,7 @@ while (True):
         loop = True
         while loop:
             loop = False
-            try:# SPACE pressed
+            try:  # SPACE pressed
                 detected_cards = list()
                 singles = list()
                 duplicates = list()
@@ -276,10 +276,6 @@ while (True):
                 print("Error in recognition, taking image again")
                 ret, frame = cap.read()
                 cv2.waitKey(50)
-
-
-
-
 
 comm.close()
 cap.release()
