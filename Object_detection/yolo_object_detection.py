@@ -248,28 +248,37 @@ while (True):
         break
     # elif k % 256 == 32:
     else:
-        # SPACE pressed
-        detected_cards = list()
-        print("Space pressed")
-        if not capture_from_webcam:
-            frame = cv2.imread(img_name)
-        cv2.imwrite("./split_images/image.png", frame)
-        blob = cv2.dnn.blobFromImage(frame, 1 / 255.0, (1280, 1280), (0, 0, 0), True, crop=False)
-        net.setInput(blob)
-        outs = net.forward(output_layers)
-        postprocess(frame, outs)
-        cv2.imwrite("./registrered.png", frame)
+        loop = True
+        while loop:
+            loop = False
+            try:# SPACE pressed
+                detected_cards = list()
+                singles = list()
+                duplicates = list()
+                duplicate_boxes = list()
+                classIds_o = list()
+                boxes_o = list()
+                lowest_y_box = None
+                print("Space pressed")
+                if not capture_from_webcam:
+                    frame = cv2.imread(img_name)
+                cv2.imwrite("./split_images/image.png", frame)
+                blob = cv2.dnn.blobFromImage(frame, 1 / 255.0, (1280, 1280), (0, 0, 0), True, crop=False)
+                net.setInput(blob)
+                outs = net.forward(output_layers)
+                postprocess(frame, outs)
+                cv2.imwrite("./registrered.png", frame)
 
-        comm.send(registrer_piles(frame.shape[1]))
-        # cv2.imwrite("final.png", image)
-        print("Final image saved")
+                comm.send(registrer_piles(frame.shape[1]))
+                # cv2.imwrite("final.png", image)
+                print("Final image saved")
+            except:
+                loop = True
+                print("Error in recognition, taking image again")
 
-        singles = list()
-        duplicates = list()
-        duplicate_boxes = list()
-        classIds_o = list()
-        boxes_o = list()
-        lowest_y_box = None
+
+
+
 
 comm.close()
 cap.release()
