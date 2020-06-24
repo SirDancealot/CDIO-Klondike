@@ -275,6 +275,8 @@ while (True):
             except:
                 loop = True
                 print("Error in recognition, taking image again")
+                ret, frame = cap.read()
+                cv2.waitKey(50)
 
 
 

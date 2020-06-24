@@ -417,11 +417,30 @@ public class LogicController {
         return returnString;
     }
 
-    public void setupGame(GameState initialRead){
-        gameState.getTurnedStock().addCard(initialRead.getTurnedStock().getTopCard());
-        for (int i = 0; i < 7; i++) {
-            gameState.getGameStacks()[i].addCard(initialRead.getGameStacks()[i].getTopCard());
+    public void setupGame(GameState initialRead) throws IOException {
+        boolean loop = true;
+        while (loop) {
+            loop = false;
+            try {
+                gameState.getTurnedStock().getTopCard().setSuit(initialRead.getTurnedStock().getTopCard().getSuit().getValue());
+                gameState.getTurnedStock().getTopCard().setCardValue(initialRead.getTurnedStock().getTopCard().getCardValue().getValue());
+                gameState.getTurnedStock().getTopCard().setHidden(false);
+                gameState.getTurnedStock().getTopCard().setKnown(true);
+                for (int i = 0; i < 7; i++) {
+                    gameState.getGameStacks()[i].getTopCard().setSuit(initialRead.getGameStacks()[i].getTopCard().getSuit().getValue());
+                    gameState.getGameStacks()[i].getTopCard().setCardValue(initialRead.getGameStacks()[i].getTopCard().getCardValue().getValue());
+                    gameState.getGameStacks()[i].getTopCard().setHidden(false);
+                    gameState.getGameStacks()[i].getTopCard().setKnown(true);
+                }
+            } catch (Exception e) {
+                loop = true;
+                System.out.println("Error in game setup, trying again");
+                initialRead = CommController.getINSTANCE().requestNewState();
+            }
         }
+
+
+
     }
 
     public void updateGameState(String returnString, GameState imgState) throws IOException {

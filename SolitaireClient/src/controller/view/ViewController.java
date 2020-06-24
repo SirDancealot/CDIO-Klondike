@@ -141,7 +141,9 @@ public class ViewController {
     }
 
     public void setText(String text) {
-        moveString.setText(text);
+        Platform.runLater(() -> {
+            moveString.setText(text);
+        });
     }
 
     public void updateView(GameState gameState) {

@@ -49,12 +49,12 @@ public class MainController {
 					break;
 				}
 				returnString = logic.makeMoveTest();
-				if (returnString.contains("hidden"))
-					requestImage = true;
-				if (returnString.isEmpty()) {
+				if (returnString == null) {
 					playing = false;
 					returnString = "You lost";
 				}
+				if (returnString.contains("hidden"))
+					requestImage = true;
 				view.setText(returnString);
 				view.updateView(logic.getGameState());
 			}
