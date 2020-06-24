@@ -262,7 +262,6 @@ while (True):
                 print("Registrering cards on webcam")
                 if not capture_from_webcam:
                     frame = cv2.imread(img_name)
-                cv2.imwrite("./split_images/image.png", frame)
                 blob = cv2.dnn.blobFromImage(frame, 1 / 255.0, (1280, 1280), (0, 0, 0), True, crop=False)
                 net.setInput(blob)
                 outs = net.forward(output_layers)
