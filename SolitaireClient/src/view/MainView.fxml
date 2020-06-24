@@ -16,7 +16,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1320.0" styleClass="background1" stylesheets="@Stylesheet.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.ViewController">
+<AnchorPane prefHeight="800.0" prefWidth="1320.0" styleClass="background1" stylesheets="@Stylesheet.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.view.ViewController">
    <children>
       <Button layoutX="14.0" layoutY="759.0" mnemonicParsing="false" onAction="#editButton" text="Edit card" AnchorPane.bottomAnchor="10.0">
          <opaqueInsets>

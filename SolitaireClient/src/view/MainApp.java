@@ -1,8 +1,10 @@
 package view;
 
+import Controller.runtime.MainController;
+import Controller.view.AddCardController;
+import Controller.view.CardEditController;
+import Controller.view.ViewController;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -14,7 +16,6 @@ import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
-import Controller.*;
 import model.dto.Card;
 
 public class MainApp extends Application {

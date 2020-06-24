@@ -1,4 +1,4 @@
-package Controller;
+package Controller.runtime;
 
 import model.dto.GameState;
 import model.parser.DeckDecoder;

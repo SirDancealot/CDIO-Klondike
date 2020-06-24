@@ -1,8 +1,6 @@
-package Controller;
+package Controller.runtime;
 
 import model.dto.*;
-
-import java.util.Scanner;
 
 public class LogicController {
     private static LogicController logicController_instance = null;
