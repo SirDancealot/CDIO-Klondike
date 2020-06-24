@@ -43,7 +43,6 @@ class GameState:
 
 
 HIDDEN = Card(Suit.HIDDEN, Value.HIDDEN)
-testCard = Card(Suit.DIAMONDS, Value.ACE)
 
 
 def encode_card(card):
