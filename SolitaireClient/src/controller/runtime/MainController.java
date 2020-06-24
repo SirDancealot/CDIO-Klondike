@@ -40,7 +40,7 @@ public class MainController {
 				if (requestImage) {
 					requestImage = false;
 					view.showLoadingAlert();
-					updateGameState(returnString, comm.requestNewState());
+					logic.updateGameState(returnString, comm.requestNewState());
 					view.hideLoadingAlert();
 				}
 				view.setNextMove(false);
@@ -60,48 +60,6 @@ public class MainController {
 			}
 		}
 		comm.close();
-	}
-
-	public void updateGameState(String returnString, GameState imgState) throws IOException {
-		boolean tryAgain = true;
-		while (tryAgain) {
-			tryAgain = false;
-			try {
-				if (returnString.equals("Turn new hidden card from the stock")) {
-					logic.getGameState().getTurnedStock().getTopCard().setSuit(imgState.getTurnedStock().getTopCard().getSuit().getValue());
-					logic.getGameState().getTurnedStock().getTopCard().setCardValue(imgState.getTurnedStock().getTopCard().getCardValue().get());
-
-				}
-				else {
-					System.out.println(returnString);
-					int i = Character.getNumericValue(returnString.charAt(returnString.length()-1))-1;
-					System.out.println(i);
-					GameStack[] gStacks = logic.getGameState().getGameStacks();
-					int gStackLen[] = new int[7];
-					int imgStackLen[] = new int[7];
-					for (int j = 0; j < 7; j++) {
-						gStackLen[j] = gStacks[j].getMovable();
-						imgStackLen[j] = imgState.getGameStacks()[j].getMovable();
-					}
-					gStackLen[i]++;
-
-					int a = 0, b = 0;
-					while (a < i) {
-						if ((gStackLen[a] != 0 && imgStackLen[b] != 0) || (gStackLen[a] == 0 && imgStackLen[b] == 0)) {
-							b++;
-						}
-						a++;
-					}
-					logic.getGameState().getGameStacks()[a].getTopCard().setCardValue(imgState.getGameStacks()[b].getTopCard().getCardValue().getValue());
-					logic.getGameState().getGameStacks()[a].getTopCard().setSuit(imgState.getGameStacks()[b].getTopCard().getSuit().get());
-				}
-			} catch (Exception e) {
-				tryAgain = true;
-				System.out.println("Error in image, trying again");
-				imgState = CommController.getINSTANCE().requestNewState();
-			}
-
-		}
 	}
 
 	public void setViewController(ViewController viewController) {
