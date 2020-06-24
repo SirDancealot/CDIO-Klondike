@@ -2,6 +2,8 @@ package Controller.runtime;
 
 import model.dto.*;
 
+import java.io.IOException;
+
 public class LogicController {
     private static LogicController logicController_instance = null;
 
@@ -422,4 +424,44 @@ public class LogicController {
         }
     }
 
+    public void updateGameState(String returnString, GameState imgState) throws IOException {
+        boolean tryAgain = true;
+        while (tryAgain) {
+            tryAgain = false;
+            try {
+                if (returnString.equals("Turn new hidden card from the stock")) {
+                    gameState.getTurnedStock().getTopCard().setSuit(imgState.getTurnedStock().getTopCard().getSuit().getValue());
+                    gameState.getTurnedStock().getTopCard().setCardValue(imgState.getTurnedStock().getTopCard().getCardValue().get());
+
+                }
+                else {
+                    System.out.println(returnString);
+                    int i = Character.getNumericValue(returnString.charAt(returnString.length()-1))-1;
+                    System.out.println(i);
+                    GameStack[] gStacks = gameState.getGameStacks();
+                    int gStackLen[] = new int[7];
+                    int imgStackLen[] = new int[7];
+                    for (int j = 0; j < 7; j++) {
+                        gStackLen[j] = gStacks[j].getMovable();
+                        imgStackLen[j] = imgState.getGameStacks()[j].getMovable();
+                    }
+                    gStackLen[i]++;
+
+                    int a = 0, b = 0;
+                    while (a < i) {
+                        if ((gStackLen[a] != 0 && imgStackLen[b] != 0) || (gStackLen[a] == 0 && imgStackLen[b] == 0)) {
+                            b++;
+                        }
+                        a++;
+                    }
+                    gameState.getGameStacks()[a].getTopCard().setCardValue(imgState.getGameStacks()[b].getTopCard().getCardValue().getValue());
+                    gameState.getGameStacks()[a].getTopCard().setSuit(imgState.getGameStacks()[b].getTopCard().getSuit().get());
+                }
+            } catch (Exception e) {
+                tryAgain = true;
+                System.out.println("Error in image, trying again");
+                imgState = CommController.getINSTANCE().requestNewState();
+            }
+
+        }    }
 }
