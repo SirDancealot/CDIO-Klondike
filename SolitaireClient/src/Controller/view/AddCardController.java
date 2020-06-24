@@ -1,5 +1,6 @@
-package Controller;
+package Controller.view;
 
+import Controller.runtime.LogicController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
