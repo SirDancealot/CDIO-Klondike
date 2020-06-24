@@ -1,8 +1,11 @@
+/**
+ * @author Michael Jeppesen s185123
+ * @author Rasmus Traub Nielsen s185101
+ */
+
 package controller.runtime;
 
 import controller.view.ViewController;
-import model.dto.GameStack;
-import model.dto.GameState;
 
 import java.io.IOException;
 
@@ -48,7 +51,7 @@ public class MainController {
 					view.setText("The game has been won");
 					break;
 				}
-				returnString = logic.makeMoveTest();
+				returnString = logic.makeMove();
 				if (returnString == null) {
 					playing = false;
 					returnString = "You lost";

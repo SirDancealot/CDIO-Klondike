@@ -1,3 +1,8 @@
+/**
+ * @author Anders Eisenhardt s185146
+ * @author Martin Wassmann s185033
+ */
+
 package controller.view;
 
 import javafx.fxml.FXML;

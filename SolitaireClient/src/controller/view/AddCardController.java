@@ -1,3 +1,8 @@
+/**
+ * @author Anders Eisenhardt s185146
+ * @author Philip Bocayes Ørnskov s185137
+ */
+
 package controller.view;
 
 import controller.runtime.LogicController;

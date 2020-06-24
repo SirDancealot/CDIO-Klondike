@@ -1,3 +1,9 @@
+/**
+ * @author Anders Eisenhardt s185146
+ * @author Rasmus Traub Nielsen s185101
+ * @author Michael Jeppesen s185123
+ */
+
 package model.dto;
 
 import javafx.beans.property.*;

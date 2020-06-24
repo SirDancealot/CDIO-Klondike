@@ -1,3 +1,9 @@
+###
+#
+# Author: Michael Jeppesen s185123
+#
+###
+
 from enum import IntEnum
 
 

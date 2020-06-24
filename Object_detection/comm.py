@@ -1,3 +1,10 @@
+###
+#
+# Author: Nicklas Chrisoffer Fritzen s180087, Michael Jeppesen s185123
+#
+###
+
+
 import socket
 
 

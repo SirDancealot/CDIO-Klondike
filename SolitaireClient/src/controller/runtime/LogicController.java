@@ -1,3 +1,8 @@
+/**
+ * @author Rasmus Traub Nielsen s185101
+ * @author Michael Jeppesen s185123
+ */
+
 package controller.runtime;
 
 import model.dto.*;
@@ -24,28 +29,8 @@ public class LogicController {
         return gameState;
     }
 
-    public void setGameState(GameState gameState){
-        this.gameState = gameState;
-    }
 
-    /*
     private String turnHiddenCard(){
-        //TODO Add revealed card to gameState.
-        int index = 0;
-        for (GameStack gameStack : gameStacks) {
-            index++;
-            if(gameStack.stack.peek().isHidden()){
-                gameStack.stack.peek().setHidden(false);
-                gameStack.stack.peek().setKnown(true);
-                return "Turn hidden card on stack " + index;
-            }
-        }
-        return null;
-    }
-
-     */
-
-    private String turnHiddenCardTest(){
         int index = 0;
         for (GameStack gameStack : gameState.getGameStacks()) {
             index++;
@@ -207,19 +192,6 @@ public class LogicController {
     }
 
     private String turnNewCardFromStock(){
-        String returnString = "Turn new card from the stock";
-        if(gameState.getStock().size() > 0){
-            //TODO Add revealed card to gameState.
-            return returnString;
-        }else if(gameState.getTurnedStock().size() != 0){
-            gameState.getStock().addCardsReversed(gameState.getTurnedStock().takeCards(gameState.getTurnedStock().stack.size()));
-            return returnString;
-        }else return null;
-    }
-
-
-
-    private String turnNewCardFromStockTest(){
 
         if(gameState.getStock().size() > 0){
             String returnString = "Turn new " + (gameState.getStock().stack.peek().isKnown() ? "" : "hidden ") + "card from the stock";
@@ -240,18 +212,6 @@ public class LogicController {
         }else return null;
     }
 
-    public int countCardsInGame(){
-        int cards = 0;
-        for (GameStack gameStack : gameState.getGameStacks()) {
-            cards += gameStack.size();
-        }
-        for (FinishStack finishStack : gameState.getFinishStacks()) {
-            cards += finishStack.size();
-        }
-        cards += gameState.getStock().size();
-        cards += gameState.getTurnedStock().size();
-        return cards;
-    }
 
     private String cardToFinishStack(){
         String returnString;
@@ -373,10 +333,10 @@ public class LogicController {
         return won;
     }
 
-    public String makeMoveTest(){
+    public String makeMove(){
         String returnString;
 
-        returnString = turnHiddenCardTest();
+        returnString = turnHiddenCard();
         if(returnString != null){
             return returnString;
         }
@@ -408,7 +368,7 @@ public class LogicController {
             return returnString;
         }
         if(possibleMoveInStock()) {
-            returnString = turnNewCardFromStockTest();
+            returnString = turnNewCardFromStock();
             if (returnString != null) {
                 return returnString;
             }

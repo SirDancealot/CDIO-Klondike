@@ -1,3 +1,7 @@
+/**
+ * @author Anders Eisenhardt s185146
+ * @author Michael Jeppesen s185123
+ */
 package view;
 
 import controller.runtime.MainController;

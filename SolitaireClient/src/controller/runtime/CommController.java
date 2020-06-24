@@ -1,3 +1,8 @@
+/**
+ * @author Michael Jeppesen s185123
+ * @author Nicklas Christoffer Fritzen s180087
+ */
+
 package controller.runtime;
 
 import model.dto.GameState;

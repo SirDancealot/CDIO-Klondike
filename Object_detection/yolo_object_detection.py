@@ -1,3 +1,8 @@
+###
+#
+# Authors: Michael Jeppesen s185123, Anders Bjørndal Pedersen s185129
+#
+###
 import cv2
 import numpy as np
 

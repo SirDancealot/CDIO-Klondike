@@ -1,3 +1,8 @@
+/**
+ * @author Rasmus Traub Nielsen s185101
+ * @author Michael Jeppesen s185123
+ */
+
 package model.dto;
 
 import java.util.Collections;
